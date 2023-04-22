@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:productos_app/models/models.dart';
 import 'package:productos_app/providers/db_provider.dart';
 
-class ProductListPorvider extends ChangeNotifier {
+class ProductListProvider extends ChangeNotifier {
   List<ProductModel> products = [];
   String categoriaSeleacionada = '';
+  bool isLoading = true;
+
+  ProductListProvider() {
+    cargarProduct();
+  }
 
   newProduct(String nombre, String? categoria, double precio, int stock,
       String? imagen) async {
