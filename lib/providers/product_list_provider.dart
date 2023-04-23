@@ -25,10 +25,14 @@ class ProductListProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  cargarProduct() async {
+  Future<List<ProductModel>> cargarProduct() async {
+    isLoading = true;
+    notifyListeners();
     final products = await DBProvider.db.getProductAll();
     this.products = [...products];
+    isLoading = false;
     notifyListeners();
+    return this.products;
   }
 
   cargarProductByCategory(String categoria) async {

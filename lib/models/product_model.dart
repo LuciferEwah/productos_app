@@ -3,7 +3,6 @@
 //     final product = productFromJson(jsonString);
 
 import 'dart:convert';
-import 'dart:ffi';
 
 class ProductModel {
   ProductModel({

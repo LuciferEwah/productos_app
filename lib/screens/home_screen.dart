@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:productos_app/models/models.dart';
 import 'package:productos_app/providers/db_provider.dart';
+import 'package:productos_app/screens/screens.dart';
 
 import 'package:productos_app/widgets/widgets.dart';
 // ignore: unused_import
@@ -12,17 +13,16 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final productsService = Provider.of<ProductsService>(context);
-    // Obtener la instancia de ProductListProvider
     final productListProvider = Provider.of<ProductListProvider>(context);
+
+    if (productListProvider.isLoading) return const LoadingScreen();
+
+    //TODO: COMO ACCEDER A LA INFORMACION
+
     // Obtener la lista de productos
-    final products = productListProvider.products;
-
-    // Obtener la primera categoría
-    final firstCategory = products[0].categoria;
-
-    // Imprimir el nombre de la primera categoría
-    print(firstCategory);
+    //print(productListProvider);
+    //final products = productListProvider.products;
+    //print(products[0].categoria);
 
     return Scaffold(
       appBar: AppBar(
@@ -30,9 +30,11 @@ class HomeScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: ListView.builder(
-        itemCount: 10,
+        itemCount: productListProvider.products.length,
         itemBuilder: (context, i) => GestureDetector(
-          child: const ProductCard(),
+          child: ProductCard(
+            product: productListProvider.products[i],
+          ),
           onTap: () => Navigator.pushNamed(context, 'producto'),
         ),
       ),
