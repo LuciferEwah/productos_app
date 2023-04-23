@@ -12,15 +12,16 @@ class ProductListProvider extends ChangeNotifier {
   }
 
   newProduct(String nombre, String? categoria, double precio, int stock,
-      String? imagen) async {
+      String? imagen, int? id) async {
     final newProduct = ProductModel(
-        nombre: nombre,
-        categoria: categoria,
-        precio: precio,
-        stock: stock,
-        imagen: imagen);
-    final id = await DBProvider.db.newProduct(newProduct);
-    newProduct.id;
+      nombre: nombre,
+      categoria: categoria,
+      precio: precio,
+      stock: stock,
+      imagen: imagen,
+      id: id,
+    );
+    await DBProvider.db.newProduct(newProduct);
     products.add(newProduct);
     notifyListeners();
   }

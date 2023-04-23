@@ -21,10 +21,10 @@ class ProductsService extends ChangeNotifier {
 
     productsMap.forEach((key, value) {
       final tempProducto = ProductModel.fromJson(value);
-      tempProducto.id = key;
+      //tempProducto.id = key;
       products.add(tempProducto);
     });
-    print(products[0].nombre);
+    //print(products[0].nombre);
   }
 
   //TODO: HACER FEACT DE PRODUCTOS

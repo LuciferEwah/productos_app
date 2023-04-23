@@ -22,7 +22,7 @@ class HomeScreen extends StatelessWidget {
     // Obtener la lista de productos
     //print(productListProvider);
     //final products = productListProvider.products;
-    //print(products[0].categoria);
+    //print(products[2].id);
 
     return Scaffold(
       appBar: AppBar(

@@ -20,7 +20,10 @@ class ProductCard extends StatelessWidget {
             _BackgroundImage(
               url: product.imagen,
             ),
-            _DetailsProduct(name: product.nombre),
+            _DetailsProduct(
+              name: product.nombre,
+              id: product.id,
+            ),
             Positioned(
                 top: 0,
                 right: 0,
@@ -115,7 +118,7 @@ class _DetailsProduct extends StatelessWidget {
   });
 
   final String name;
-  final String? id;
+  final int? id;
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +139,7 @@ class _DetailsProduct extends StatelessWidget {
                     fontWeight: FontWeight.bold),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis),
-            Text('ID',
+            Text('$id',
                 style: const TextStyle(color: Colors.black, fontSize: 15),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis)
