@@ -41,4 +41,12 @@ class ProductModel {
         "stock": stock,
         "imagen": imagen,
       };
+
+  ProductModel copy() => ProductModel(
+      nombre: nombre,
+      precio: precio,
+      stock: stock,
+      categoria: categoria,
+      id: id,
+      imagen: imagen);
 }

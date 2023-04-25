@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:productos_app/models/models.dart';
 import 'package:productos_app/providers/db_provider.dart';
 import 'package:productos_app/screens/screens.dart';
+import 'package:productos_app/services/products_service.dart';
 
 import 'package:productos_app/widgets/widgets.dart';
 // ignore: unused_import
@@ -32,11 +33,14 @@ class HomeScreen extends StatelessWidget {
       body: ListView.builder(
         itemCount: productListProvider.products.length,
         itemBuilder: (context, i) => GestureDetector(
-          child: ProductCard(
-            product: productListProvider.products[i],
-          ),
-          onTap: () => Navigator.pushNamed(context, 'producto'),
-        ),
+            child: ProductCard(
+              product: productListProvider.products[i],
+            ),
+            onTap: () {
+              productListProvider.selectedProduct =
+                  productListProvider.products[i].copy();
+              Navigator.pushNamed(context, 'producto');
+            }),
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add_a_photo),

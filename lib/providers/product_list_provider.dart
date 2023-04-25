@@ -6,6 +6,7 @@ class ProductListProvider extends ChangeNotifier {
   List<ProductModel> products = [];
   String categoriaSeleacionada = '';
   bool isLoading = true;
+  late ProductModel selectedProduct;
 
   ProductListProvider() {
     cargarProduct();

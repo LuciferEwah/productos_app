@@ -38,8 +38,6 @@ class DBProvider {
       // Crea la tabla 'detalle_venta'
       await db.execute(
           'CREATE TABLE DETALLE_VENTA (id INTEGER PRIMARY KEY, venta_id INTEGER, producto_id INTEGER, cantidad INTEGER, subtotal REAL, FOREIGN KEY(venta_id) REFERENCES VENTA(id), FOREIGN KEY(producto_id) REFERENCES PRODUCTO(id))');
-      // Cierra la base de datos
-      await db.close();
     });
   }
 
