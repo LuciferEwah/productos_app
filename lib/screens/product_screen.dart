@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:productos_app/providers/product_from_provider.dart';
+import 'package:flutter/services.dart';
 import 'package:productos_app/widgets/product_img.dart';
-import 'package:productos_app/providers/product_list_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:productos_app/providers/provider.dart';
 
 class ProductScreen extends StatelessWidget {
   const ProductScreen({Key? key}) : super(key: key);
@@ -27,8 +27,10 @@ class _ProductScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final productFrom = Provider.of<ProductFromProvider>(context);
     return Scaffold(
       body: SingleChildScrollView(
+          //keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: Column(
         children: [
           Stack(
@@ -65,7 +67,7 @@ class _ProductScreenBody extends StatelessWidget {
       )),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            //Todo: Guardar producto
+            productListProvider.updateById(productFrom.product.id!);
           },
           child: const Icon(Icons.save_outlined)),
     );
@@ -79,7 +81,8 @@ class _ProductFrom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final productFrom = Provider.of<ProductFromProvider>(context).product;
+    final productFrom = Provider.of<ProductFromProvider>(context);
+    final product = productFrom.product;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Container(
@@ -87,11 +90,13 @@ class _ProductFrom extends StatelessWidget {
           width: double.infinity,
           decoration: _buildBoxDecoration(),
           child: Form(
+            key: productFrom.formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(children: [
               const SizedBox(height: 10),
               TextFormField(
-                initialValue: productFrom.nombre,
-                onChanged: (value) => productFrom.nombre = value,
+                initialValue: product.nombre,
+                onChanged: (value) => product.nombre = value,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'El nombre es obligatorio';
@@ -102,23 +107,37 @@ class _ProductFrom extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               TextFormField(
-                  initialValue: '${productFrom.precio}',
+                  initialValue: '${product.precio}',
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                        RegExp(r'^(\d+)?\.?\d{0,2}'))
+                  ],
                   onChanged: (value) {
                     if (double.tryParse(value) == null) {
-                      productFrom.precio = 0;
+                      product.precio = 0;
                     } else {
-                      productFrom.precio = double.parse(value);
+                      product.precio = double.parse(value);
                     }
                   },
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                       hintText: 'Precio del producto', labelText: 'precio')),
               const SizedBox(height: 30),
-              SwitchListTile.adaptive(
-                value: true,
-                title: const Text('Disponible'),
-                onChanged: (value) {},
-              ),
+              TextFormField(
+                  initialValue: '${product.stock}',
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d+$'))
+                  ],
+                  onChanged: (value) {
+                    if (int.tryParse(value) == null) {
+                      product.stock = 0;
+                    } else {
+                      product.stock = int.parse(value);
+                    }
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                      hintText: 'stock del producto', labelText: 'stock')),
               const SizedBox(height: 10),
             ]),
           )),

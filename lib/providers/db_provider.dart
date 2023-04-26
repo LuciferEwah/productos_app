@@ -48,10 +48,18 @@ class DBProvider {
     return res;
   }
 
-  Future<ProductModel?> getProductById(int id) async {
+  Future<ProductModel> getProductById(int id) async {
     final db = await database;
-    final res = await db!.query('PRODUCTO', where: 'id = ?', whereArgs: [id]);
-    return res.isNotEmpty ? ProductModel.fromJson(res.first) : null;
+    final result = await db!.query(
+      'products',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (result.isNotEmpty) {
+      return ProductModel.fromJson(result.first);
+    } else {
+      throw Exception('Product not found');
+    }
   }
 
   Future<List<ProductModel>> getProductAll() async {
