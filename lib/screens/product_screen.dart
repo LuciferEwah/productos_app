@@ -67,7 +67,7 @@ class _ProductScreenBody extends StatelessWidget {
       )),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            productListProvider.updateById(productFrom.product.id!);
+            productListProvider.update(productFrom.product);
           },
           child: const Icon(Icons.save_outlined)),
     );

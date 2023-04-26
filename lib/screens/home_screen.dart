@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:productos_app/models/models.dart';
-import 'package:productos_app/providers/db_provider.dart';
 import 'package:productos_app/screens/screens.dart';
-import 'package:productos_app/services/products_service.dart';
 
 import 'package:productos_app/widgets/widgets.dart';
 // ignore: unused_import
