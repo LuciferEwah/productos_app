@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:productos_app/models/models.dart';
 import 'package:productos_app/providers/db_provider.dart';
-import 'package:productos_app/providers/product_from_provider.dart';
-import 'package:provider/provider.dart';
 
 class ProductListProvider extends ChangeNotifier {
   List<ProductModel> products = [];
   String categoriaSeleacionada = '';
   bool isLoading = true;
-  bool isSaving = true;
   late ProductModel selectedProduct;
 
   ProductListProvider() {
@@ -25,6 +22,7 @@ class ProductListProvider extends ChangeNotifier {
       imagen: imagen,
       id: id,
     );
+
     await DBProvider.db.newProduct(newProduct);
     products.add(newProduct);
     notifyListeners();
@@ -58,8 +56,8 @@ class ProductListProvider extends ChangeNotifier {
     cargarProductByCategory(categoriaSeleacionada);
   }
 
-  updateById(int product) async {
-    await DBProvider.db.updateProduct(product as ProductModel);
-    notifyListeners();
+  update(product) async {
+    await DBProvider.db.updateProduct(product);
+    cargarProduct();
   }
 }
