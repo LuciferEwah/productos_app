@@ -97,6 +97,7 @@ class _ProductScreenBody extends StatelessWidget {
           FloatingActionButton(
             onPressed: () {
               productListProvider.update(productFrom.product);
+              Navigator.of(context).pop();
             },
             heroTag: null,
             child: const Icon(Icons.save_outlined),

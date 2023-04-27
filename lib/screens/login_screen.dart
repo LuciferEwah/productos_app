@@ -38,11 +38,20 @@ class LoginScreen extends StatelessWidget {
           const SizedBox(
             height: 30,
           ),
-          const Text('Crear nueva cuenta',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(
-            height: 50,
-          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, 'register'); // Replace 'login' with the name of your desired route
+            },
+            child: const Text(
+              'Ya tengo cuenta',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          )
         ],
       )),
     ));
