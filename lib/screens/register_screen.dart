@@ -98,7 +98,7 @@ class _RegisterFrom extends StatelessWidget {
               labelText: 'Contraseña',
               prefixIcon: Icons.lock_outline,
             ),
-            onChanged: (value) => registrationForm.password = value,
+            onChanged: (value) => registrationForm.contrasena = value,
             validator: (value) {
               return (value != null && value.length >= 6)
                   ? null
@@ -116,9 +116,9 @@ class _RegisterFrom extends StatelessWidget {
               labelText: 'Confirmar Contraseña',
               prefixIcon: Icons.lock_outline,
             ),
-            onChanged: (value) => registrationForm.confirmPassword = value,
+            onChanged: (value) => registrationForm.confirmcontrasena = value,
             validator: (value) {
-              return (value == registrationForm.password)
+              return (value == registrationForm.contrasena)
                   ? null
                   : 'Las contraseñas no coinciden';
             },

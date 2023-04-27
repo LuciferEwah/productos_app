@@ -95,7 +95,7 @@ class _LoginFrom extends StatelessWidget {
                     hintText: '*******',
                     labelText: 'Contraseña',
                     prefixIcon: Icons.lock_outline),
-                onChanged: (value) => loginFrom.password = value,
+                onChanged: (value) => loginFrom.contrasena = value,
                 validator: (value) {
                   return (value != null && value.length >= 6)
                       ? null

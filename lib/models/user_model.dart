@@ -7,12 +7,12 @@ import 'dart:convert';
 class UserModel {
   UserModel(
       {this.id,
-      required this.mail,
-      required this.password});
+      required this.email,
+      required this.contrasena});
 
   int? id;
-  String mail;
-  String password;
+  String email;
+  String contrasena;
 
   factory UserModel.fromRawJson(String str) =>
       UserModel.fromJson(json.decode(str));
@@ -21,16 +21,16 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
       id: json["id"],
-      mail: json["mail"],
-      password: json["password"]);
+      email: json["email"],
+      contrasena: json["contrasena"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "mail": mail,
-        "password": password};
+        "email": email,
+        "contrasena": contrasena};
 
   UserModel copy() => UserModel(
-      mail: mail,
-      password: password,
+      email: email,
+      contrasena: contrasena,
       id: id);
 }

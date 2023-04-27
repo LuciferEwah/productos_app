@@ -13,16 +13,16 @@ class UserListProvider extends ChangeNotifier {
 
   UserListProvider() {
     cargarUser();
-    selectedUser = UserModel(mail: '', password: '');
+    selectedUser = UserModel(email: '', contrasena: '');
   }
 
   newUser(
-      {required String mail,
-      required String password,
+      {required String email,
+      required String contrasena,
       int? id}) async {
     final newUser = UserModel(
-      mail: mail,
-      password: password,
+      email: email,
+      contrasena: contrasena,
       id: id,
     );
 

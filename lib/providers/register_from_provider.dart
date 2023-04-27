@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class RegisterFromProvider extends ChangeNotifier {
   GlobalKey<FormState> fromKey = GlobalKey<FormState>();
   String email = '';
-  String password = '';
+  String contrasena = '';
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  set confirmPassword(String confirmPassword) {}
+  set confirmcontrasena(String confirmcontrasena) {}
   set isLoading(bool value) {
     _isLoading = value;
     notifyListeners();
@@ -16,7 +16,7 @@ class RegisterFromProvider extends ChangeNotifier {
 
   bool isValidFrom() {
     print(fromKey.currentState?.validate());
-    print('$email, $password');
+    print('$email, $contrasena');
     return fromKey.currentState?.validate() ?? false;
   }
 }
