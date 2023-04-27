@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:productos_app/models/models.dart';
 import 'package:productos_app/providers/db_provider.dart';
@@ -7,9 +9,11 @@ class ProductListProvider extends ChangeNotifier {
   String categoriaSeleacionada = '';
   bool isLoading = true;
   late ProductModel selectedProduct;
+  File? newImgFile;
 
   ProductListProvider() {
     cargarProduct();
+    selectedProduct = ProductModel(nombre: '', precio: 0, stock: 0);
   }
 
   newProduct(
@@ -64,5 +68,11 @@ class ProductListProvider extends ChangeNotifier {
   update(product) async {
     await DBProvider.db.updateProduct(product);
     cargarProduct();
+  }
+
+  void updateSelectProductImage(String path) {
+    selectedProduct.imagen = path;
+    newImgFile = File.fromUri(Uri(path: path));
+    notifyListeners();
   }
 }

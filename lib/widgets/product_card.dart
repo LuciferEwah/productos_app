@@ -125,7 +125,7 @@ class _DetailsProduct extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 50),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         width: double.infinity,
         height: 70,
         decoration: _buildBoxDecoration(),
@@ -150,7 +150,7 @@ class _DetailsProduct extends StatelessWidget {
   }
 
   BoxDecoration _buildBoxDecoration() => BoxDecoration(
-      borderRadius: BorderRadius.only(
+      borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(25), topRight: Radius.circular(25)),
       color: Colors.orange[700]);
 }

@@ -4,6 +4,8 @@ import 'package:productos_app/widgets/product_img.dart';
 import 'package:provider/provider.dart';
 import 'package:productos_app/providers/provider.dart';
 
+import '../services/services.dart';
+
 class ProductScreen extends StatelessWidget {
   const ProductScreen({Key? key}) : super(key: key);
 
@@ -52,8 +54,10 @@ class _ProductScreenBody extends StatelessWidget {
                   top: 60,
                   right: 30,
                   child: IconButton(
-                      onPressed: () {
+                      onPressed: () async {
                         //TODO: poner camara o galeria
+                        String path = await uploadImage();
+                        productListProvider.updateSelectProductImage(path);
                       },
                       icon: const Icon(
                         Icons.camera_alt_outlined,

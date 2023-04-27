@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class ProductImg extends StatelessWidget {
@@ -14,19 +16,10 @@ class ProductImg extends StatelessWidget {
           child: Opacity(
             opacity: 0.9,
             child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(45), topRight: Radius.circular(45)),
-              child: url == null
-                  ? const Image(
-                      image: AssetImage('assets/no-image.png'),
-                      fit: BoxFit.cover,
-                    )
-                  : FadeInImage(
-                      placeholder: const AssetImage('assets/jar-loading.gif'),
-                      image: NetworkImage(url!),
-                      fit: BoxFit.cover,
-                    ),
-            ),
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(45),
+                    topRight: Radius.circular(45)),
+                child: getImg(url)),
           ),
         ));
   }
@@ -40,4 +33,24 @@ class ProductImg extends StatelessWidget {
                 color: Colors.black.withOpacity(0.05),
                 offset: const Offset(0, 5))
           ]);
+
+  Widget getImg(String? img) {
+    if (url == null) {
+      return const Image(
+        image: AssetImage('assets/no-image.png'),
+        fit: BoxFit.cover,
+      );
+    }
+    if (img!.startsWith('http')) {
+      return FadeInImage(
+        placeholder: const AssetImage('assets/jar-loading.gif'),
+        image: NetworkImage(url!),
+        fit: BoxFit.cover,
+      );
+    }
+    return Image.file(
+      File(img),
+      fit: BoxFit.cover,
+    );
+  }
 }
