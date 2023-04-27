@@ -18,7 +18,7 @@ class ProductImg extends StatelessWidget {
                   topLeft: Radius.circular(45), topRight: Radius.circular(45)),
               child: url == null
                   ? const Image(
-                      image: AssetImage('assets/no-image.gif'),
+                      image: AssetImage('assets/no-image.png'),
                       fit: BoxFit.cover,
                     )
                   : FadeInImage(

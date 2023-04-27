@@ -86,7 +86,7 @@ class DBProvider {
     return res;
   }
 
-  Future<int?> deleteProductById(ProductModel id) async {
+  Future<int?> deleteProductById(int id) async {
     final db = await database;
     final res = await db!.delete('PRODUCTO', where: 'id = ?', whereArgs: [id]);
     return res;

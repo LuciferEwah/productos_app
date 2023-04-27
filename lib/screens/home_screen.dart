@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:productos_app/screens/screens.dart';
-
 import 'package:productos_app/widgets/widgets.dart';
-// ignore: unused_import
 import 'package:provider/provider.dart';
 import '../providers/product_list_provider.dart';
 
@@ -40,8 +38,11 @@ class HomeScreen extends StatelessWidget {
             }),
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add_a_photo),
-        onPressed: () {},
+        child: const Icon(Icons.add),
+        onPressed: () {
+          productListProvider.newProduct(nombre: '', precio: 0.0, stock: 0);
+          Navigator.pushNamed(context, 'producto');
+        },
       ),
     );
   }

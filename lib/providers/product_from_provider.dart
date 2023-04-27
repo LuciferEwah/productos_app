@@ -12,8 +12,6 @@ class ProductFromProvider extends ChangeNotifier {
   Future<void> updateProduct() async {
     if (formKey.currentState!.validate()) {
       await ProductListProvider().update(product);
-
-      // Notificar a los listeners
     }
   }
 }

@@ -65,11 +65,41 @@ class _ProductScreenBody extends StatelessWidget {
           const _ProductFrom()
         ],
       )),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            productListProvider.update(productFrom.product);
-          },
-          child: const Icon(Icons.save_outlined)),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(right: 30),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          FloatingActionButton(
+            onPressed: () {
+              if (productListProvider.selectedProduct.id == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                        'Por el momento no se puede eliminar el producto, intente en otro momento'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+                return;
+              } else {
+                productListProvider
+                    .deleteById(productListProvider.selectedProduct.id!);
+                Navigator.of(context).pop();
+              }
+            },
+            heroTag: null,
+            child:
+                const Icon(Icons.delete_outline), // Evita un error de animación
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              productListProvider.update(productFrom.product);
+            },
+            heroTag: null,
+            child: const Icon(Icons.save_outlined),
+          ),
+        ]),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 }

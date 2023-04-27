@@ -12,8 +12,13 @@ class ProductListProvider extends ChangeNotifier {
     cargarProduct();
   }
 
-  newProduct(String nombre, String? categoria, double precio, int stock,
-      String? imagen, int? id) async {
+  newProduct(
+      {required String nombre,
+      String? categoria,
+      required double precio,
+      required int stock,
+      String? imagen,
+      int? id}) async {
     final newProduct = ProductModel(
       nombre: nombre,
       categoria: categoria,
@@ -52,8 +57,8 @@ class ProductListProvider extends ChangeNotifier {
   }
 
   deleteById(int id) async {
-    await DBProvider.db.deleteProductById(id as ProductModel);
-    cargarProductByCategory(categoriaSeleacionada);
+    await DBProvider.db.deleteProductById(id);
+    cargarProduct();
   }
 
   update(product) async {
