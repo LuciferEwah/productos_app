@@ -97,4 +97,16 @@ class DBProvider {
     final res = await db!.delete('PRODUCTO');
     return res;
   }
+
+
+// user , TODO CONFIRMAR EN BDD
+  Future<int?> newUser(UserModel newUser) async {
+    final db = await database;
+    final res = await db?.insert('USUARIO', newUser.toJson());   
+    //Es el ID del ultimo resgistro insertado
+    return res;
+  }
+//TODO NO SE SI VA GETUSERALL
+  getUserAll() {}
+
 }
