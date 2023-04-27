@@ -118,7 +118,7 @@ class _RegisterFrom extends StatelessWidget {
             ),
             onChanged: (value) => registrationForm.confirmPassword = value,
             validator: (value) {
-              return (value != registrationForm.password)
+              return (value == registrationForm.password)
                   ? null
                   : 'Las contraseñas no coinciden';
             },
