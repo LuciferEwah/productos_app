@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:productos_app/screens/screens.dart';
+import 'package:productos_app/screens/shopping_screen.dart';
 import 'package:productos_app/services/services.dart';
 import 'package:provider/provider.dart';
 import 'providers/provider.dart';
@@ -32,8 +33,9 @@ class MyApp extends StatelessWidget {
       initialRoute: 'home',
       routes: {
         'login': (_) => const LoginScreen(),
-        'home': (_) => const HomeScreen(),
+        'home': (_) => HomeScreen(),
         'producto': (_) => const ProductScreen(),
+        'carrito': (_) => const ShoppingScreen(),
       },
       theme: ThemeData.light().copyWith(
           scaffoldBackgroundColor: Colors.grey[400],

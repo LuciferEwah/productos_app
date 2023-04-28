@@ -10,10 +10,12 @@ class ProductListProvider extends ChangeNotifier {
   bool isLoading = true;
   late ProductModel selectedProduct;
   File? newImgFile;
+  late ProductModel selectedProductForCart;
 
   ProductListProvider() {
     cargarProduct();
     selectedProduct = ProductModel(nombre: '', precio: 0, stock: 0);
+    selectedProductForCart = ProductModel(nombre: '', precio: 0, stock: 0);
   }
 
   newProduct(
