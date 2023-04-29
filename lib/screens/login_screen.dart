@@ -3,6 +3,7 @@ import 'package:productos_app/providers/login_from_provider.dart';
 import 'package:productos_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 import '../interface/input_decorations.dart';
+import '../providers/user_list_provider.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -38,11 +39,20 @@ class LoginScreen extends StatelessWidget {
           const SizedBox(
             height: 30,
           ),
-          const Text('Crear nueva cuenta',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(
-            height: 50,
-          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, 'register'); // Replace 'login' with the name of your desired route
+            },
+            child: const Text(
+              'Registrarme',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          )
         ],
       )),
     ));
@@ -86,7 +96,7 @@ class _LoginFrom extends StatelessWidget {
                     hintText: '*******',
                     labelText: 'Contraseña',
                     prefixIcon: Icons.lock_outline),
-                onChanged: (value) => loginFrom.password = value,
+                onChanged: (value) => loginFrom.contrasena = value,
                 validator: (value) {
                   return (value != null && value.length >= 6)
                       ? null
@@ -95,34 +105,46 @@ class _LoginFrom extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            MaterialButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              disabledColor: Colors.orange[700],
-              elevation: 0,
-              color: Colors.orange,
-              onPressed: loginFrom.isLoading
-                  ? null
-                  : () async {
-                      FocusScope.of(context).unfocus();
-                      if (!loginFrom.isValidFrom()) return;
+              MaterialButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                disabledColor: Colors.orange[700],
+                elevation: 0,
+                color: Colors.orange,
+                onPressed: loginFrom.isLoading
+                    ? null
+                    : () async {
+                        FocusScope.of(context).unfocus();
+                        if (!loginFrom.isValidFrom()) return;
 
-                      loginFrom.isLoading = true;
-                      Future.delayed(const Duration(seconds: 2));
-                      //TODO: VALIDAR SI EL LOGIN ES CORRECTO BACKEND
-                      loginFrom.isLoading = false;
-                      Navigator.pushReplacementNamed(context, 'home');
-                    },
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 80, vertical: 12),
-                child: Text(
-                  loginFrom.isLoading ? 'Espere' : 'Ingresar',
-                  style: const TextStyle(fontSize: 16),
+                        loginFrom.isLoading = true;
+                        Future.delayed(const Duration(seconds: 2));
+                        //TODO: VALIDAR SI EL LOGIN ES CORRECTO BACKEND
+                        UserListProvider provider = UserListProvider();
+                        bool userExists = provider.checkUserExists(email: loginFrom.email, contrasena: loginFrom.contrasena) as bool;
+                        if (userExists) {
+                          // User exists, navigate to home screen
+                          loginFrom.isLoading = false;
+                          Navigator.pushReplacementNamed(context, 'home');
+                        } else {
+                          // User does not exist, show error message
+                          loginFrom.isLoading = false;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Usuario o contraseña incorrectos')),
+                          );
+                        }
+                        ///
+                        },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 80, vertical: 12),
+                  child: Text(
+                    loginFrom.isLoading ? 'Espere' : 'Ingresar',
+                    style: const TextStyle(fontSize: 16),
+                  ),
                 ),
-              ),
-            )
-          ],
-        ));
+              )
+            ],
+          ));
   }
 }
