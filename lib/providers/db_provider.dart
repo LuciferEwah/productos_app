@@ -98,15 +98,21 @@ class DBProvider {
     return res;
   }
 
-
 // user , TODO CONFIRMAR EN BDD
   Future<int?> newUser(UserModel newUser) async {
     final db = await database;
-    final res = await db?.insert('USUARIO', newUser.toJson());   
+    final res = await db?.insert('USUARIO', newUser.toJson());
     //Es el ID del ultimo resgistro insertado
     return res;
   }
-//TODO NO SE SI VA GETUSERALL
-  getUserAll() {}
 
+//TODO NO SE SI VA GETUSERALL
+  getUserEmail(String email) async {
+    final db = await database;
+    final res =
+        await db!.query('USUARIO', where: 'email = ?', whereArgs: [email]);
+    return res.isNotEmpty ? res.map((e) => UserModel.fromJson(e)).toList() : [];
+  }
+
+  getUserAll() {}
 }

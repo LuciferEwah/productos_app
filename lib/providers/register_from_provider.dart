@@ -15,8 +15,6 @@ class RegisterFromProvider extends ChangeNotifier {
   }
 
   bool isValidFrom() {
-    print(fromKey.currentState?.validate());
-    print('$email, $contrasena');
     return fromKey.currentState?.validate() ?? false;
   }
 }

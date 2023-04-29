@@ -16,10 +16,8 @@ class UserListProvider extends ChangeNotifier {
     selectedUser = UserModel(email: '', contrasena: '');
   }
 
-  newUser(UserModel user, 
-      {required String email,
-      required String contrasena,
-      int? id}) async {
+  newUser(UserModel user,
+      {required String email, required String contrasena, int? id}) async {
     final newUser = UserModel(
       email: email,
       contrasena: contrasena,
@@ -32,24 +30,27 @@ class UserListProvider extends ChangeNotifier {
   }
 
   Future<List<UserModel>> cargarUser() async {
-  isLoading = true;
-  notifyListeners();
-  final users = await DBProvider.db.getUserAll();
-  if (users == null) {
+    isLoading = true;
+    notifyListeners();
+    final users = await DBProvider.db.getUserAll();
+    if (users == null) {
+      isLoading = false;
+      notifyListeners();
+      return [];
+    }
+    this.users = [...users];
     isLoading = false;
     notifyListeners();
-    return [];
+    return this.users;
   }
-  this.users = [...users];
-  isLoading = false;
-  notifyListeners();
-  return this.users;
-}
 
-  Future<bool> checkUserExists({required String email, required String contrasena}) async {
+  Future<bool> checkUserExists(
+      {required String email, required String contrasena}) async {
     //TODO cambiar con firebase
-    final users = await DBProvider.db.getUserAll();
-    return users.any((user) => user.email == email && user.contrasena == contrasena);
+    final users = await DBProvider.db.getUserEmail(email);
+    return users != null &&
+        users.any(
+            (user) => user.email == email && user.contrasena == contrasena);
   }
 
 /*
@@ -63,5 +64,4 @@ class UserListProvider extends ChangeNotifier {
     cargarUser();
   }
 */
-
 }
