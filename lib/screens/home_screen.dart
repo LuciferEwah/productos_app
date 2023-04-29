@@ -7,7 +7,7 @@ import '../providers/product_list_provider.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
 //TODO: eliminar
-  final List<String> productList = [
+  final List<String> productListShopping = [
     'Control Xbox!',
     'Control Xbox!',
     'Product C',
@@ -33,7 +33,7 @@ class HomeScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           ButtonShoping(
-              productList: productList,
+              productList: productListShopping,
               productListProvider: productListProvider),
         ],
       ),
