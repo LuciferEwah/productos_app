@@ -10,8 +10,8 @@ class HomeScreen extends StatelessWidget {
   final List<String> productListShopping = [
     'Control Xbox!',
     'Control Xbox!',
-    'Product C',
-    'Product D',
+    'Control Xbox!',
+    '',
   ];
 
   @override

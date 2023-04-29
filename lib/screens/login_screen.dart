@@ -53,6 +53,24 @@ class LoginScreen extends StatelessWidget {
                 decoration: TextDecoration.underline,
               ),
             ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context,
+                  'admin'); // Replace 'login' with the name of your desired route
+            },
+            child: const Text(
+              'Admin',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+              ),
+            ),
           )
         ],
       )),

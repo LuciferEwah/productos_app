@@ -42,9 +42,10 @@ class RegisterScreen extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, 'login'); // Replace 'login' with the name of your desired route
+              Navigator.pushNamed(context,
+                  'login'); // Replace 'login' with the name of your desired route
             },
-            child: Text(
+            child: const Text(
               'Ya tengo cuenta',
               style: TextStyle(
                 fontSize: 18,
@@ -84,9 +85,7 @@ class _RegisterFrom extends StatelessWidget {
               String pattern =
                   r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
               RegExp regExp = RegExp(pattern);
-              return regExp.hasMatch(value ?? '')
-                  ? null
-                  : 'Formato inválido';
+              return regExp.hasMatch(value ?? '') ? null : 'Formato inválido';
             },
           ),
           const SizedBox(
@@ -150,7 +149,9 @@ class _RegisterFrom extends StatelessWidget {
                       email: registrationForm.email,
                       contrasena: registrationForm.contrasena,
                     );
-                    provider.newUser(user, email: user.email, contrasena: user.contrasena);
+                    provider.newUser(user,
+                        email: user.email, contrasena: user.contrasena);
+
                     ///
                     registrationForm.isLoading = false;
                     Navigator.pushReplacementNamed(context, 'home');
