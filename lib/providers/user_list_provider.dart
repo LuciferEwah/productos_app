@@ -16,7 +16,7 @@ class UserListProvider extends ChangeNotifier {
     selectedUser = UserModel(email: '', contrasena: '');
   }
 
-  newUser(
+  newUser(UserModel user, 
       {required String email,
       required String contrasena,
       int? id}) async {
@@ -32,13 +32,24 @@ class UserListProvider extends ChangeNotifier {
   }
 
   Future<List<UserModel>> cargarUser() async {
-    isLoading = true;
-    notifyListeners();
-    final users = await DBProvider.db.getUserAll();
-    this.users = [...users];
+  isLoading = true;
+  notifyListeners();
+  final users = await DBProvider.db.getUserAll();
+  if (users == null) {
     isLoading = false;
     notifyListeners();
-    return this.users;
+    return [];
+  }
+  this.users = [...users];
+  isLoading = false;
+  notifyListeners();
+  return this.users;
+}
+
+  Future<bool> checkUserExists({required String email, required String contrasena}) async {
+    //TODO cambiar con firebase
+    final users = await DBProvider.db.getUserAll();
+    return users.any((user) => user.email == email && user.contrasena == contrasena);
   }
 
 /*

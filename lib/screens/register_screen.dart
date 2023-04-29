@@ -3,6 +3,8 @@ import 'package:productos_app/providers/register_from_provider.dart'; //TODO can
 import 'package:productos_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 import '../interface/input_decorations.dart';
+import '../models/user_model.dart';
+import '../providers/user_list_provider.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -142,6 +144,14 @@ class _RegisterFrom extends StatelessWidget {
                     registrationForm.isLoading = true;
                     Future.delayed(const Duration(seconds: 2));
                     // TODO: REGISTRAR AL USUARIO EN BACKEND
+                    ///mockup
+                    UserListProvider provider = UserListProvider();
+                    final user = UserModel(
+                      email: registrationForm.email,
+                      contrasena: registrationForm.contrasena,
+                    );
+                    provider.newUser(user, email: user.email, contrasena: user.contrasena);
+                    ///
                     registrationForm.isLoading = false;
                     Navigator.pushReplacementNamed(context, 'home');
                   },
