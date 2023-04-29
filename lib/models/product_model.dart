@@ -23,6 +23,8 @@ class ProductModel {
   factory ProductModel.fromRawJson(String str) =>
       ProductModel.fromJson(json.decode(str));
 
+  get cantidad => null;
+
   String toRawJson() => json.encode(toJson());
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(

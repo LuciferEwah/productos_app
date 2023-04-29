@@ -55,7 +55,6 @@ class _ProductScreenBody extends StatelessWidget {
                   right: 30,
                   child: IconButton(
                       onPressed: () async {
-                        //TODO: poner camara o galeria
                         String path = await uploadImage();
                         productListProvider.updateSelectProductImage(path);
                       },
