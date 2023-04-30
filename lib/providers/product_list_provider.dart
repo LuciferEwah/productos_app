@@ -92,4 +92,6 @@ class ProductListProvider extends ChangeNotifier {
     newImgFile = File.fromUri(Uri(path: path));
     notifyListeners();
   }
+
+  void removeProduct(int index) {}
 }

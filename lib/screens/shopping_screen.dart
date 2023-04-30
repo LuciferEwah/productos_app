@@ -12,23 +12,21 @@ class ShoppingScreen extends StatefulWidget {
 }
 
 class _ShoppingScreenState extends State<ShoppingScreen> {
-  List<ProductModel> products = [
-    ProductModel(nombre: 'Producto 1', precio: 32, stock: 2),
-    ProductModel(nombre: 'Producto 2', precio: 34, stock: 2),
-    // Agrega más productos aquí
-  ];
-
   Map<int, int> cantidad = {};
 
   @override
   void initState() {
     super.initState();
-    products.asMap().forEach((index, product) {
+    Provider.of<ProductListProvider>(context, listen: false)
+        .productsForCard
+        .asMap()
+        .forEach((index, product) {
       cantidad[index] = 1;
     });
   }
 
   double get subtotal {
+    final products = Provider.of<ProductListProvider>(context).productsForCard;
     if (products.isEmpty) {
       return 0;
     }
@@ -47,13 +45,15 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
 
   void removeProduct(int index) {
     setState(() {
-      products.removeAt(index);
+      final provider = Provider.of<ProductListProvider>(context, listen: false);
+      provider.removeProduct(provider.productsForCard[index]);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final productListProvider = Provider.of<ProductListProvider>(context);
+    List<ProductModel> products =
+        Provider.of<ProductListProvider>(context).productsForCard;
 
     return Scaffold(
       appBar: AppBar(
@@ -66,7 +66,6 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
               itemCount: products.length,
               itemBuilder: (BuildContext context, int index) {
                 final product = products[index];
-
                 return Dismissible(
                   key: Key(product.nombre),
                   direction: DismissDirection.endToStart,
@@ -90,24 +89,25 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                     child: ListTile(
                       title: Text(product.nombre),
                       subtitle: Text(
-                          '\$${product.precio.toStringAsFixed(2)} x ${cantidad[index]}'),
+                          '\$${product.precio.toStringAsFixed(2)} x ${cantidad[index] ?? 1}'),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
                             onPressed: () {
-                              if (cantidad[index]! > 1) {
-                                setState(() {
-                                  cantidad[index] = cantidad[index]! - 1;
-                                });
+                              if (cantidad[index] != null &&
+                                  cantidad[index]! > 1) {
+                                cantidad[index] = cantidad[index]! - 1;
                               }
+                              setState(() {});
                             },
                             icon: const Icon(Icons.remove),
                           ),
+                          Text('${cantidad[index] ?? 1}'),
                           IconButton(
                             onPressed: () {
                               setState(() {
-                                cantidad[index] = cantidad[index]! + 1;
+                                cantidad[index] = (cantidad[index] ?? 1) + 1;
                               });
                             },
                             icon: const Icon(Icons.add),
@@ -164,7 +164,6 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
             child: ElevatedButton(
               onPressed: () {
                 // Acción del botón de pago
-                printPurchaseInfo();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange[700],
@@ -179,18 +178,5 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
         ],
       ),
     );
-  }
-
-  void printPurchaseInfo() {
-    print('Fecha de la compra: ${DateTime.now()}');
-    print('Subtotal: \$${subtotal.toStringAsFixed(2)}');
-    print('Total: \$${total.toStringAsFixed(2)}');
-    print('Detalle de productos:');
-    for (int i = 0; i < products.length; i++) {
-      final product = products[i];
-      final productSubtotal = product.precio * cantidad[i]!;
-      print(
-          '${i + 1}. ${product.nombre} - Cantidad: ${cantidad[i]} - Precio unitario: \$${product.precio.toStringAsFixed(2)} - Subtotal: \$${productSubtotal.toStringAsFixed(2)}');
-    }
   }
 }
