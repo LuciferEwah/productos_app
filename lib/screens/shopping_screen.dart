@@ -13,20 +13,19 @@ class ShoppingScreen extends StatefulWidget {
 
 class _ShoppingScreenState extends State<ShoppingScreen> {
   Map<int, int> cantidad = {};
+  List<ProductModel> products = [];
 
   @override
   void initState() {
     super.initState();
-    Provider.of<ProductListProvider>(context, listen: false)
-        .productsForCard
-        .asMap()
-        .forEach((index, product) {
+    products = Provider.of<ProductListProvider>(context, listen: false)
+        .productsForCard;
+    products.asMap().forEach((index, product) {
       cantidad[index] = 1;
     });
   }
 
   double get subtotal {
-    final products = Provider.of<ProductListProvider>(context).productsForCard;
     if (products.isEmpty) {
       return 0;
     }
@@ -43,11 +42,15 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
 
   double get total => subtotal + iva;
 
-  void removeProduct(int index) {
-    setState(() {
-      final provider = Provider.of<ProductListProvider>(context, listen: false);
-      provider.removeProduct(provider.productsForCard[index]);
-    });
+  void removeProduct(ProductModel product) {
+    final int index = products.indexOf(product);
+    if (index >= 0) {
+      setState(() {
+        products.removeAt(index);
+        cantidad.remove(index);
+        Provider.of<ProductListProvider>(context, listen: false);
+      });
+    }
   }
 
   @override
@@ -69,7 +72,7 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                 return Dismissible(
                   key: Key(product.nombre),
                   direction: DismissDirection.endToStart,
-                  onDismissed: (direction) => removeProduct(index),
+                  onDismissed: (direction) => removeProduct(product),
                   background: Container(
                     color: Colors.red,
                     child: const Align(
@@ -164,6 +167,17 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
             child: ElevatedButton(
               onPressed: () {
                 // Acción del botón de pago
+
+                print('Detalles de la compra:');
+
+                products.asMap().forEach((index, product) {
+                  print(
+                      'ID: ${product.id}, NOMBRE: ${product.nombre}, PRECIO: ${product.precio.toStringAsFixed(2)}, Cantidad: ${cantidad[index]}');
+                });
+                print('Fecha: ${DateTime.now()}');
+                print('Subtotal: ${subtotal.toStringAsFixed(2)}');
+                print('IVA: ${iva.toStringAsFixed(2)}');
+                print('Total: ${total.toStringAsFixed(2)}');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange[700],
