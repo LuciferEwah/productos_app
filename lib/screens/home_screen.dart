@@ -2,17 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:productos_app/screens/screens.dart';
 import 'package:productos_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
+import '../models/models.dart';
 import '../providers/product_list_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
-//TODO: eliminar
-  final List<String> productListShopping = [
-    'Control Xbox!',
-    'Control Xbox!',
-    'Control Xbox!',
-    '',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +20,7 @@ class HomeScreen extends StatelessWidget {
     //print(productListProvider);
     //final products = productListProvider.products;
     //print(products[2].id);
+    print(productListProvider.productsForCard);
 
     return Scaffold(
       appBar: AppBar(
@@ -33,21 +28,23 @@ class HomeScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           ButtonShoping(
-              productList: productListShopping,
+              productList: productListProvider.productsForCard,
               productListProvider: productListProvider),
         ],
       ),
       body: ListView.builder(
         itemCount: productListProvider.products.length,
         itemBuilder: (context, i) => GestureDetector(
-            child: ProductCard(
+          child: ProductCard(
               product: productListProvider.products[i],
-            ),
-            onTap: () {
-              productListProvider.selectedProduct =
-                  productListProvider.products[i].copy();
-              Navigator.pushNamed(context, 'producto');
-            }),
+              productListProvider: productListProvider // Pasa la instancia aquí
+              ),
+          onTap: () {
+            productListProvider.selectedProduct =
+                productListProvider.products[i].copy();
+            Navigator.pushNamed(context, 'producto');
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
@@ -66,7 +63,7 @@ class ButtonShoping extends StatelessWidget {
     required this.productListProvider,
   });
 
-  final List<String> productList;
+  final List<ProductModel> productList;
   final ProductListProvider productListProvider;
 
   @override
@@ -94,8 +91,8 @@ class ButtonShoping extends StatelessWidget {
             ),
             child: Text(
               productList
-                  .where((product) => productListProvider.products
-                      .any((p) => p.nombre == product))
+                  .where((product) =>
+                      productListProvider.products.contains(product))
                   .length
                   .toString(),
               style: const TextStyle(

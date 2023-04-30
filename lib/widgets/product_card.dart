@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:productos_app/models/models.dart';
-import 'package:provider/provider.dart';
-
-import '../providers/provider.dart';
+import 'package:productos_app/providers/product_list_provider.dart'; // Importar la clase ProductListProvider
 
 class ProductCard extends StatelessWidget {
   const ProductCard({
     Key? key,
     required this.product,
     this.trailing, // Agrega el parámetro aquí
+    required this.productListProvider, // Agrega la instancia de ProductListProvider
   }) : super(key: key);
 
   final ProductModel product;
   final Widget? trailing; // Declara el parámetro aquí
+  final ProductListProvider productListProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +30,7 @@ class ProductCard extends StatelessWidget {
             ),
             _DetailsProduct(
               product: product,
+              productListProvider: productListProvider,
             ),
             Positioned(
               top: 0,
@@ -127,9 +128,12 @@ class _DetailsProduct extends StatelessWidget {
   const _DetailsProduct({
     super.key,
     required this.product,
+    required this.productListProvider, // Agrega la instancia de ProductListProvider
   });
 
   final ProductModel product;
+  final ProductListProvider
+      productListProvider; // Declara la instancia de ProductListProvider
 
   @override
   Widget build(BuildContext context) {
@@ -161,12 +165,22 @@ class _DetailsProduct extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                // Acción del botón
-                print(product);
+                bool productAdded = productListProvider.addToCart(product);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: productAdded
+                        ? Text(
+                            'Producto agregado al carrito: ${product.nombre}')
+                        : Text(
+                            'El producto ya está en el carrito: ${product.nombre}'),
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  foregroundColor: Colors.orange[700]),
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.orange[700],
+              ),
               child: const Text('Comprar'),
             ),
           ],

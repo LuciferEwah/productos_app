@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:productos_app/models/models.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/product_list_provider.dart';
 
 class ShoppingScreen extends StatefulWidget {
   const ShoppingScreen({Key? key}) : super(key: key);
@@ -9,17 +12,14 @@ class ShoppingScreen extends StatefulWidget {
 }
 
 class _ShoppingScreenState extends State<ShoppingScreen> {
-  List<ProductModel> products = [
-    ProductModel(nombre: 'Producto 1', precio: 32, stock: 2),
-    ProductModel(nombre: 'Producto 2', precio: 34, stock: 2),
-    // Agrega más productos aquí
-  ];
-
   Map<int, int> cantidad = {};
+  List<ProductModel> products = [];
 
   @override
   void initState() {
     super.initState();
+    products = Provider.of<ProductListProvider>(context, listen: false)
+        .productsForCard;
     products.asMap().forEach((index, product) {
       cantidad[index] = 1;
     });
@@ -42,14 +42,22 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
 
   double get total => subtotal + iva;
 
-  void removeProduct(int index) {
-    setState(() {
-      products.removeAt(index);
-    });
+  void removeProduct(ProductModel product) {
+    final int index = products.indexOf(product);
+    if (index >= 0) {
+      setState(() {
+        products.removeAt(index);
+        cantidad.remove(index);
+        Provider.of<ProductListProvider>(context, listen: false);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    List<ProductModel> products =
+        Provider.of<ProductListProvider>(context).productsForCard;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shopping'),
@@ -61,11 +69,10 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
               itemCount: products.length,
               itemBuilder: (BuildContext context, int index) {
                 final product = products[index];
-
                 return Dismissible(
                   key: Key(product.nombre),
                   direction: DismissDirection.endToStart,
-                  onDismissed: (direction) => removeProduct(index),
+                  onDismissed: (direction) => removeProduct(product),
                   background: Container(
                     color: Colors.red,
                     child: const Align(
@@ -85,24 +92,25 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                     child: ListTile(
                       title: Text(product.nombre),
                       subtitle: Text(
-                          '\$${product.precio.toStringAsFixed(2)} x ${cantidad[index]}'),
+                          '\$${product.precio.toStringAsFixed(2)} x ${cantidad[index] ?? 1}'),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
                             onPressed: () {
-                              if (cantidad[index]! > 1) {
-                                setState(() {
-                                  cantidad[index] = cantidad[index]! - 1;
-                                });
+                              if (cantidad[index] != null &&
+                                  cantidad[index]! > 1) {
+                                cantidad[index] = cantidad[index]! - 1;
                               }
+                              setState(() {});
                             },
                             icon: const Icon(Icons.remove),
                           ),
+                          Text('${cantidad[index] ?? 1}'),
                           IconButton(
                             onPressed: () {
                               setState(() {
-                                cantidad[index] = cantidad[index]! + 1;
+                                cantidad[index] = (cantidad[index] ?? 1) + 1;
                               });
                             },
                             icon: const Icon(Icons.add),
@@ -159,7 +167,17 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
             child: ElevatedButton(
               onPressed: () {
                 // Acción del botón de pago
-                printPurchaseInfo();
+
+                print('Detalles de la compra:');
+
+                products.asMap().forEach((index, product) {
+                  print(
+                      'ID: ${product.id}, NOMBRE: ${product.nombre}, PRECIO: ${product.precio.toStringAsFixed(2)}, Cantidad: ${cantidad[index]}');
+                });
+                print('Fecha: ${DateTime.now()}');
+                print('Subtotal: ${subtotal.toStringAsFixed(2)}');
+                print('IVA: ${iva.toStringAsFixed(2)}');
+                print('Total: ${total.toStringAsFixed(2)}');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange[700],
@@ -174,18 +192,5 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
         ],
       ),
     );
-  }
-
-  void printPurchaseInfo() {
-    print('Fecha de la compra: ${DateTime.now()}');
-    print('Subtotal: \$${subtotal.toStringAsFixed(2)}');
-    print('Total: \$${total.toStringAsFixed(2)}');
-    print('Detalle de productos:');
-    for (int i = 0; i < products.length; i++) {
-      final product = products[i];
-      final productSubtotal = product.precio * cantidad[i]!;
-      print(
-          '${i + 1}. ${product.nombre} - Cantidad: ${cantidad[i]} - Precio unitario: \$${product.precio.toStringAsFixed(2)} - Subtotal: \$${productSubtotal.toStringAsFixed(2)}');
-    }
   }
 }
