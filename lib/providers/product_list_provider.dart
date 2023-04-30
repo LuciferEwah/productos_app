@@ -6,16 +6,31 @@ import 'package:productos_app/providers/db_provider.dart';
 
 class ProductListProvider extends ChangeNotifier {
   List<ProductModel> products = [];
+  List<ProductModel> productsForCard = [];
+
   String categoriaSeleacionada = '';
   bool isLoading = true;
   late ProductModel selectedProduct;
   File? newImgFile;
-  late ProductModel selectedProductForCart;
 
   ProductListProvider() {
     cargarProduct();
     selectedProduct = ProductModel(nombre: '', precio: 0, stock: 0);
-    selectedProductForCart = ProductModel(nombre: '', precio: 0, stock: 0);
+  }
+
+  bool addToCart(ProductModel product) {
+    // Comprueba si el producto ya está en la lista
+    bool productExists = productsForCard
+        .any((existingProduct) => existingProduct.id == product.id);
+
+    // Si el producto no está en la lista, agrégalo
+    if (!productExists) {
+      productsForCard.add(product);
+      notifyListeners();
+      return true; // Producto agregado al carrito
+    }
+
+    return false; // Producto ya está en el carrito
   }
 
   newProduct(

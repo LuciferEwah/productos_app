@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:productos_app/models/models.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/product_list_provider.dart';
 
 class ShoppingScreen extends StatefulWidget {
   const ShoppingScreen({Key? key}) : super(key: key);
@@ -50,6 +53,8 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final productListProvider = Provider.of<ProductListProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shopping'),
