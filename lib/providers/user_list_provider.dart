@@ -6,10 +6,9 @@ import 'package:productos_app/providers/db_provider.dart';
 
 class UserListProvider extends ChangeNotifier {
   List<UserModel> users = []; //TODO IMPLEMENTAR FIREBASE
-  String categoriaSeleacionada = '';
   bool isLoading = true;
   late UserModel selectedUser;
-  File? newImgFile;
+
 
   UserListProvider() {
     cargarUser();
@@ -53,12 +52,15 @@ class UserListProvider extends ChangeNotifier {
             (user) => user.email == email && user.contrasena == contrasena);
   }
 
-/*
-  deleteById(int id) async {
-    await DBProvider.db.deleteUserById(id);
-    cargarUser();
+  deleteById(int? id) async {
+    if (id != null) {
+      await DBProvider.db.deleteUserById(id);
+      cargarUser();
+    }
   }
 
+
+/*
   update(user) async {
     await DBProvider.db.updateUser(user);
     cargarUser();

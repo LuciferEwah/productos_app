@@ -11,6 +11,8 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userListProvider = Provider.of<UserListProvider>(context);
+    final users = userListProvider.users;
     return Scaffold(
         body: AuthBackground(
       child: SingleChildScrollView(
@@ -138,23 +140,44 @@ class _RegisterFrom extends StatelessWidget {
                 ? null
                 : () async {
                     FocusScope.of(context).unfocus();
-                    if (!registrationForm.isValidFrom()) return;
-
-                    registrationForm.isLoading = true;
-                    Future.delayed(const Duration(seconds: 2));
-                    // TODO: REGISTRAR AL USUARIO EN BACKEND
-                    ///mockup
-                    UserListProvider provider = UserListProvider();
-                    final user = UserModel(
-                      email: registrationForm.email,
-                      contrasena: registrationForm.contrasena,
-                    );
-                    provider.newUser(user,
-                        email: user.email, contrasena: user.contrasena);
-
-                    ///
-                    registrationForm.isLoading = false;
-                    Navigator.pushReplacementNamed(context, 'home');
+                    final userListProvider = Provider.of<UserListProvider>(context, listen: false);
+                    bool userExists = await userListProvider.checkUserExists(
+                        email: registrationForm.email,
+                        contrasena: registrationForm.contrasena);
+                    if (registrationForm.isValidFrom() && !userExists) {
+                      registrationForm.isLoading = true;
+                      // TODO: REGISTRAR AL USUARIO EN BACKEND
+                      ///mockup
+                      final user = UserModel(
+                        email: registrationForm.email,
+                        contrasena: registrationForm.contrasena,
+                      );
+                      userListProvider.newUser(user,
+                          email: user.email, contrasena: user.contrasena);
+                      ///
+                      registrationForm.isLoading = false;
+                      userListProvider.notifyListeners();
+                      Navigator.pushReplacementNamed(context, 'login');
+                    }
+                    else {//TODO optimizar
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Error'),
+                            content: const Text('El usuario ya existe.'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   },
             child: Container(
               padding: const EdgeInsets.symmetric(
