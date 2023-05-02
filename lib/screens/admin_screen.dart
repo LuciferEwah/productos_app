@@ -13,6 +13,7 @@ class UserListPage extends StatelessWidget {
     final users = userListProvider.users;
 
     return Scaffold(
+      backgroundColor: Colors.white, // Added white background
       appBar: AppBar(
         title: const Text('User List'),
       ),
@@ -26,21 +27,30 @@ class UserListPage extends StatelessWidget {
                   key: UniqueKey(),
                   background: Container(
                     color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: 16),
                     child: const Icon(
                       Icons.delete,
                       color: Colors.white,
                       size: 36,
                     ),
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.only(right: 16),
                   ),
                   direction: DismissDirection.endToStart,
                   onDismissed: (_) {
                     userListProvider.deleteById(user.id);
                   },
-                  child: ListTile(
-                    title: Text(user.email),
-                    subtitle: Text(user.id.toString()),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey.shade400,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: ListTile(
+                      title: Text(user.email),
+                      subtitle: Text('ID: ${user.id}'),
+                    ),
                   ),
                 );
               },
