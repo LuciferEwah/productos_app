@@ -106,7 +106,6 @@ class DBProvider {
     return res;
   }
 
-//TODO NO SE SI VA GETUSERALL
   getUserEmail(String email) async {
     final db = await database;
     final res =
@@ -114,5 +113,17 @@ class DBProvider {
     return res.isNotEmpty ? res.map((e) => UserModel.fromJson(e)).toList() : [];
   }
 
-  getUserAll() {}
+  Future<List<UserModel>> getUserAll() async {
+    final db = await database;
+    final res = await db!.query('USUARIO');
+    return res.isNotEmpty
+        ? res.map((e) => UserModel.fromJson(e)).toList()
+        : [];
+  }
+
+  Future<int?> deleteUserById(int id) async {
+    final db = await database;
+    final res = await db!.delete('USUARIO', where: 'id = ?', whereArgs: [id]);
+    return res;
+  }
 }

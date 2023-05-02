@@ -17,6 +17,7 @@ class AppState extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => ProductsService()),
         ChangeNotifierProvider(create: (_) => ProductListProvider()),
+        ChangeNotifierProvider(create: (_) => UserListProvider()),
       ],
       child: const MyApp(),
     );
@@ -31,14 +32,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Productos App',
       debugShowCheckedModeBanner: false,
-      initialRoute: 'home',
+      initialRoute: 'login',
       routes: {
         'login': (_) => const LoginScreen(),
         'home': (_) => HomeScreen(),
         'producto': (_) => const ProductScreen(),
         'register': (_) => const RegisterScreen(),
         'carrito': (_) => const ShoppingScreen(),
-        'admin': (_) => const AdminScreen(),
+        'admin': (_) =>  const UserListPage(),
       },
       theme: ThemeData.light().copyWith(
           scaffoldBackgroundColor: Colors.grey[400],
