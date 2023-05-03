@@ -40,7 +40,7 @@ class DBProvider {
           'CREATE TABLE DETALLE_VENTA (id INTEGER PRIMARY KEY, venta_id INTEGER, producto_id INTEGER, cantidad INTEGER, subtotal REAL, FOREIGN KEY(venta_id) REFERENCES VENTA(id), FOREIGN KEY(producto_id) REFERENCES PRODUCTO(id))');
     });
   }
-
+//////////////////////////////////////////////// producto ////////////////////////////////////////////////
   Future<int?> newProduct(ProductModel newProduct) async {
     final db = await database;
     final res = await db?.insert('PRODUCTO', newProduct.toJson());
@@ -115,7 +115,7 @@ Future<int?> discountItemQuantity(int id, int quantity) async {
   return await db.updateProduct(updatedProduct);
 }
 
-//////////////////////////////////////////////// user , TODO CONFIRMAR EN BDD
+//////////////////////////////////////////////// usuario ////////////////////////////////////////////////
   Future<int?> newUser(UserModel newUser) async {
     final db = await database;
     final res = await db?.insert('USUARIO', newUser.toJson());
@@ -143,4 +143,23 @@ Future<int?> discountItemQuantity(int id, int quantity) async {
     final res = await db!.delete('USUARIO', where: 'id = ?', whereArgs: [id]);
     return res;
   }
+  //////////////////////////////////////////////// venta ////////////////////////////////////////////////
+  Future<void> addVentaAndDetalleVenta(VentaModel venta, List<DetalleVentaModel> detallesVenta) async {
+  final db = await DBProvider.db.database;
+
+  // Insertar venta
+  final ventaId = await db!.insert('VENTA', venta.toJson());
+
+  // Insertar detallesVenta
+  for (final detalleVenta in detallesVenta) {
+    final Map<String, dynamic> detalleVentaData = {
+      'producto_id': detalleVenta.productoId,
+      'cantidad': detalleVenta.cantidad,
+      'subtotal': detalleVenta.subtotal,
+      'venta_id': ventaId,
+    };
+    await db.insert('DETALLE_VENTA', detalleVentaData);
+  }
+}
+
 }
