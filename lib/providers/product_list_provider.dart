@@ -93,9 +93,18 @@ class ProductListProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> checkStock(int id, int quantity) async {
+    final db = DBProvider.db;
+    final product = await db.getProductById(id);
+    return product.stock >= quantity;
+  }
+
   Future<void> buy(id,quantity) async {
       await DBProvider.db.discountItemQuantity(id,quantity);
       //TODO AGREGAR HISTORIAL A COMPRADOR?
       cargarProduct();
   }
+
+
+
 }
