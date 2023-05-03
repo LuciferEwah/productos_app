@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:productos_app/providers/register_from_provider.dart';
+import 'package:productos_app/providers/register_from_provider.dart'; //TODO can
 import 'package:productos_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 import '../interface/input_decorations.dart';
@@ -35,7 +35,7 @@ class RegisterScreen extends StatelessWidget {
               ),
               ChangeNotifierProvider(
                 create: (_) => RegisterFromProvider(),
-                child: const _RegisterForm(),
+                child: const _RegisterFrom(),
               )
             ]),
           ),
@@ -63,15 +63,8 @@ class RegisterScreen extends StatelessWidget {
   }
 }
 
-class _RegisterForm extends StatefulWidget {
-  const _RegisterForm({Key? key}) : super(key: key);
-
-  @override
-  _RegisterFormState createState() => _RegisterFormState();
-}
-
-class _RegisterFormState extends State<_RegisterForm> {
-  bool userExists = false;
+class _RegisterFrom extends StatelessWidget {
+  const _RegisterFrom({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -147,31 +140,43 @@ class _RegisterFormState extends State<_RegisterForm> {
                 ? null
                 : () async {
                     FocusScope.of(context).unfocus();
-                    final userListProvider =
-                        Provider.of<UserListProvider>(context, listen: false);
+                    final userListProvider = Provider.of<UserListProvider>(context, listen: false);
                     bool userExists = await userListProvider.checkUserExists(
                         email: registrationForm.email,
                         contrasena: registrationForm.contrasena);
-                    setState(() {
-                      this.userExists = userExists;
-                    });
-                    if (registrationForm.isValidForm() && !userExists) {
+                    if (registrationForm.isValidFrom() && !userExists) {
                       registrationForm.isLoading = true;
-
+                      // TODO: REGISTRAR AL USUARIO EN BACKEND
+                      ///mockup
                       final user = UserModel(
                         email: registrationForm.email,
                         contrasena: registrationForm.contrasena,
                       );
                       userListProvider.newUser(user,
                           email: user.email, contrasena: user.contrasena);
+                      ///
                       registrationForm.isLoading = false;
                       userListProvider.notifyListeners();
                       Navigator.pushReplacementNamed(context, 'login');
-                    } else {
-                      registrationForm.isLoading = false;
-                      if (userExists) {
-                        _showUserExistsDialog();
-                      }
+                    }
+                    else {//TODO optimizar
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Error'),
+                            content: const Text('El usuario ya existe.'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     }
                   },
             child: Container(
@@ -187,26 +192,6 @@ class _RegisterFormState extends State<_RegisterForm> {
           )
         ],
       ),
-    );
-  }
-
-  void _showUserExistsDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Error'),
-          content: const Text('El usuario ya existe.'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }

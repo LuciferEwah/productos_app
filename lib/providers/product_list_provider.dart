@@ -92,4 +92,10 @@ class ProductListProvider extends ChangeNotifier {
     newImgFile = File.fromUri(Uri(path: path));
     notifyListeners();
   }
+
+  Future<void> buy(id,quantity) async {
+      await DBProvider.db.discountItemQuantity(id,quantity);
+      //TODO AGREGAR HISTORIAL A COMPRADOR?
+      cargarProduct();
+  }
 }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../models/user_model.dart';
 import '../providers/user_list_provider.dart';
 
 class UserListPage extends StatelessWidget {

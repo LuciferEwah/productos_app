@@ -51,7 +51,7 @@ class DBProvider {
   Future<ProductModel> getProductById(int id) async {
     final db = await database;
     final result = await db!.query(
-      'products',
+      'PRODUCTO',
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -97,8 +97,25 @@ class DBProvider {
     final res = await db!.delete('PRODUCTO');
     return res;
   }
+  
 
-// user , TODO CONFIRMAR EN BDD
+Future<int?> discountItemQuantity(int id, int quantity) async {
+  final db = DBProvider.db;
+  final product = await db.getProductById(id);
+  final newQuantity = product.stock - quantity;
+  if (newQuantity < 0) {
+    throw Exception('no hay stock');
+  }
+  final updatedProduct = ProductModel(
+    id: product.id,
+    nombre: product.nombre,
+    precio: product.precio,
+    stock: newQuantity,
+  );
+  return await db.updateProduct(updatedProduct);
+}
+
+//////////////////////////////////////////////// user , TODO CONFIRMAR EN BDD
   Future<int?> newUser(UserModel newUser) async {
     final db = await database;
     final res = await db?.insert('USUARIO', newUser.toJson());

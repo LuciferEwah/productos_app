@@ -55,9 +55,10 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<ProductModel> products =
+    final productListProvider = Provider.of<ProductListProvider>(context);
+/*TODO     List<ProductModel> products =
         Provider.of<ProductListProvider>(context).productsForCard;
-
+*/
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shopping'),
@@ -165,15 +166,17 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
           SizedBox(
             width: MediaQuery.of(context).size.width,
             child: ElevatedButton(
-              onPressed: () {
-                // Acción del botón de pago
-
-                print('Detalles de la compra:');
-
+              onPressed: () async {
+                // Acción del botón de pago                
+                
                 products.asMap().forEach((index, product) {
+                  productListProvider.buy(product.id,cantidad[index]);
+                });
+/*                products.asMap().forEach((index, product) {
                   print(
                       'ID: ${product.id}, NOMBRE: ${product.nombre}, PRECIO: ${product.precio.toStringAsFixed(2)}, Cantidad: ${cantidad[index]}');
-                });
+                });*/
+                print('Detalles de la compra:');
                 print('Fecha: ${DateTime.now()}');
                 print('Subtotal: ${subtotal.toStringAsFixed(2)}');
                 print('IVA: ${iva.toStringAsFixed(2)}');
@@ -194,3 +197,5 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
     );
   }
 }
+
+
