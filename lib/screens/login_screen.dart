@@ -152,6 +152,9 @@ class _LoginFrom extends StatelessWidget {
                       if (userExists) {
                         loginFrom.isLoading = false;
 
+                        Future<int?> logedId =
+                            provider.getIdByEmail(loginFrom.email);
+                        provider.idUser = await logedId;
                         Navigator.pushReplacementNamed(context, 'home');
                       } else {
                         loginFrom.isLoading = false;
@@ -162,8 +165,6 @@ class _LoginFrom extends StatelessWidget {
                           ),
                         );
                       }
-
-                      ///
                     },
               child: Container(
                 padding:
