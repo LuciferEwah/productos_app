@@ -111,6 +111,7 @@ class DBProvider {
       nombre: product.nombre,
       precio: product.precio,
       stock: newQuantity,
+      imagen: product.imagen
     );
     return await db.updateProduct(updatedProduct);
   }
