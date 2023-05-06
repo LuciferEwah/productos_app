@@ -165,40 +165,37 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
             child:  ElevatedButton(
               onPressed: () async {
                 if(products.isNotEmpty){
+
                   bool has_stock = true;
-                //TODO dolor
-                /*
-                  await Future.forEach(products, (ProductModel product) async {
-                    int index = products.indexOf(product);
-                    int stock = product.stock;
-                    int quantity =  cantidad[index] as int;
+                  // Verificar el stock de todos los productos en el carrito
+                  for (var product in products) {
+                    int productId = product.id!;
+                    int selectedQuantity = cantidad[productId] ?? 1;
+                    bool currentProductHasStock = await productListProvider.checkStock(productId, selectedQuantity);
 
-                    if (stock != null && quantity != null) {
-                      num availableStock = stock - quantity;
-
-                      if (product.id != null && await productListProvider.checkStock(product.id!, quantity as int)) {
-                        final snackBar = SnackBar(content: Text('No hay stock de ${product.nombre}'));
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        has_stock = false;
-                      }
+                    if (!currentProductHasStock) {
+                      has_stock = false;
+                      final snackBar = SnackBar(content: Text('No hay suficiente stock para ${product.nombre}'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      break;
                     }
-                  });
-                  */
+                  }
 
 
                   if (has_stock) {
                     int? usuarioId = userListProvider.  idUser;
                     print(usuarioId);
-                    var products = productListProvider.products;
+                    products = productListProvider.productsForCard;
                     String productList =
                         products.map((product) => product.nombre).join(', ');
                     print(
                         'Detalles de la compra: Productos: [$productList], Fecha: ${DateTime.now()}, Subtotal: ${subtotal.toStringAsFixed(2)}, IVA: ${iva.toStringAsFixed(2)}, Total: ${total.toStringAsFixed(2)}');
                     // Aquí se llama a la función realizarVenta() en ProductListProvider
-                    /*await productListProvider.realizarVenta(
-                      subtotal, iva, total, usuarioId, cantidad);*/
+                    await productListProvider.realizarVenta(
+                      subtotal, iva, total, usuarioId, cantidad);
                     final snackBar = SnackBar(content: Text('Su compra se ha realizado exitosamente'));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    products = [];
                   }
                 }
                 else{
