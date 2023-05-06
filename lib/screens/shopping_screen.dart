@@ -162,7 +162,7 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
           const Divider(),
           SizedBox(
             width: MediaQuery.of(context).size.width,
-            child:  ElevatedButton(
+            child: ElevatedButton(
               onPressed: () async {
                 if(products.isNotEmpty){
 
@@ -181,9 +181,8 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                     }
                   }
 
-
                   if (has_stock) {
-                    int? usuarioId = userListProvider.  idUser;
+                    int? usuarioId = userListProvider.idUser;
                     print(usuarioId);
                     products = productListProvider.productsForCard;
                     String productList =
@@ -197,12 +196,10 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     products = [];
                   }
+                } else {
+                  final snackBar = SnackBar(content: Text('Carrito vacio'));
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
-                else{
-                    final snackBar = SnackBar(content: Text('Carrito vacio'));
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }
-
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange[700],
