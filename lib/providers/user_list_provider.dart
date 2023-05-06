@@ -8,6 +8,7 @@ class UserListProvider extends ChangeNotifier {
   List<UserModel> users = []; //TODO IMPLEMENTAR FIREBASE
   bool isLoading = true;
   late UserModel selectedUser;
+  int? idUser;
 
 
   UserListProvider() {
@@ -50,6 +51,13 @@ class UserListProvider extends ChangeNotifier {
     return users != null &&
         users.any(
             (user) => user.email == email && user.contrasena == contrasena);
+  }
+
+  Future<int?> getIdByEmail(String email) async {
+    final db = await DBProvider.db.database;
+    final res =
+        await db!.query('USUARIO', where: 'email = ?', whereArgs: [email]);
+    return res.isNotEmpty ? res.first['id'] as int? : null;
   }
 
   deleteById(int? id) async {
