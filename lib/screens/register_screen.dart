@@ -1,5 +1,7 @@
+// ignore_for_file: invalid_use_of_visible_for_testing_member
+
 import 'package:flutter/material.dart';
-import 'package:productos_app/providers/register_from_provider.dart'; //TODO can
+import 'package:productos_app/providers/register_from_provider.dart';
 import 'package:productos_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 import '../interface/input_decorations.dart';
@@ -11,8 +13,6 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userListProvider = Provider.of<UserListProvider>(context);
-    final users = userListProvider.users;
     return Scaffold(
         body: AuthBackground(
       child: SingleChildScrollView(
@@ -140,26 +140,27 @@ class _RegisterFrom extends StatelessWidget {
                 ? null
                 : () async {
                     FocusScope.of(context).unfocus();
-                    final userListProvider = Provider.of<UserListProvider>(context, listen: false);
+                    final userListProvider =
+                        Provider.of<UserListProvider>(context, listen: false);
                     bool userExists = await userListProvider.checkUserExists(
                         email: registrationForm.email,
                         contrasena: registrationForm.contrasena);
                     if (registrationForm.isValidFrom() && !userExists) {
                       registrationForm.isLoading = true;
-                      // TODO: REGISTRAR AL USUARIO EN BACKEND
-                      ///mockup
                       final user = UserModel(
                         email: registrationForm.email,
                         contrasena: registrationForm.contrasena,
                       );
                       userListProvider.newUser(user,
                           email: user.email, contrasena: user.contrasena);
-                      ///
+
                       registrationForm.isLoading = false;
+                      // ignore: invalid_use_of_protected_member
                       userListProvider.notifyListeners();
+                      // ignore: use_build_context_synchronously
                       Navigator.pushReplacementNamed(context, 'login');
-                    }
-                    else {//TODO optimizar
+                    } else {
+                      // ignore: use_build_context_synchronously
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {

@@ -21,7 +21,6 @@ class ProductScreen extends StatelessWidget {
 
 class _ProductScreenBody extends StatelessWidget {
   const _ProductScreenBody({
-    super.key,
     required this.productListProvider,
   });
 
@@ -109,9 +108,7 @@ class _ProductScreenBody extends StatelessWidget {
 }
 
 class _ProductFrom extends StatelessWidget {
-  const _ProductFrom({
-    super.key,
-  });
+  const _ProductFrom();
 
   @override
   Widget build(BuildContext context) {
@@ -135,6 +132,7 @@ class _ProductFrom extends StatelessWidget {
                   if (value == null || value.isEmpty) {
                     return 'El nombre es obligatorio';
                   }
+                  return null;
                 },
                 decoration: const InputDecoration(
                     hintText: 'nombre del producto', labelText: 'nombre'),

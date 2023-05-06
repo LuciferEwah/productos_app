@@ -34,16 +34,16 @@ Future<String> uploadImage() async {
       // handle success
       final json = jsonDecode(responseBody);
       final secureUrl = json['secure_url'];
-      print(secureUrl);
+
       return (secureUrl);
     } else {
       // handle error
-      print(responseBody);
+
       throw Exception('Error al cargar la imagen');
     }
   } else {
     // handle error
-    print('No image selected.');
+
     throw Exception('No se seleccionó ninguna imagen.');
   }
 }

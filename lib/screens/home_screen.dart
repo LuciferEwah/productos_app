@@ -6,15 +6,13 @@ import '../models/models.dart';
 import '../providers/product_list_provider.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final productListProvider = Provider.of<ProductListProvider>(context);
 
     if (productListProvider.isLoading) return const LoadingScreen();
-
-    print(productListProvider.productsForCard);
 
     return Scaffold(
       appBar: AppBar(

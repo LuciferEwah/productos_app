@@ -9,6 +9,7 @@ class ShoppingScreen extends StatefulWidget {
   const ShoppingScreen({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _ShoppingScreenState createState() => _ShoppingScreenState();
 }
 
@@ -21,9 +22,9 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
     super.initState();
     products = Provider.of<ProductListProvider>(context, listen: false)
         .productsForCard;
-    products.forEach((product) {
+    for (var product in products) {
       cantidad[product.id!] = 1;
-    });
+    }
   }
 
   double get subtotal {
@@ -51,9 +52,7 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
   Widget build(BuildContext context) {
     final productListProvider = Provider.of<ProductListProvider>(context);
     final userListProvider = Provider.of<UserListProvider>(context);
-/*TODO     List<ProductModel> products =
-        Provider.of<ProductListProvider>(context).productsForCard;
-*/
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shopping'),
@@ -165,7 +164,7 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
             child: ElevatedButton(
               onPressed: () async {
                 if (products.isNotEmpty) {
-                  bool has_stock = true;
+                  bool hasStock = true;
                   // Verificar el stock de todos los productos en el carrito
                   for (var product in products) {
                     int productId = product.id!;
@@ -174,38 +173,33 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                         .checkStock(productId, selectedQuantity);
 
                     if (!currentProductHasStock) {
-                      has_stock = false;
+                      hasStock = false;
                       final snackBar = SnackBar(
                           content: Text(
                               'No hay suficiente stock para ${product.nombre}'));
+                      // ignore: use_build_context_synchronously
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       break;
                     }
                   }
 
-                  if (has_stock) {
+                  if (hasStock) {
                     int? usuarioId = userListProvider.idUser;
-                    print(usuarioId);
                     products = productListProvider.productsForCard;
-                    String productList =
-                        products.map((product) => product.nombre).join(', ');
-                    print(
-                        'Detalles de la compra: Productos: [$productList], Fecha: ${DateTime.now()}, Subtotal: ${subtotal.toStringAsFixed(2)}, IVA: ${iva.toStringAsFixed(2)}, Total: ${total.toStringAsFixed(2)}');
                     // Aquí se llama a la función realizarVenta() en ProductListProvider
                     await productListProvider.realizarVenta(
                         subtotal, iva, total, usuarioId, cantidad);
-
                     // Llamar a clearCart() para limpiar el carrito en ProductListProvider
                     productListProvider.clearCart();
-
-                    final snackBar = SnackBar(
+                    const snackBar = SnackBar(
                         content:
                             Text('Su compra se ha realizado exitosamente'));
+                    // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     products = [];
                   }
                 } else {
-                  final snackBar = SnackBar(content: Text('Carrito vacio'));
+                  const snackBar = SnackBar(content: Text('Carrito vacio'));
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
               },

@@ -5,7 +5,7 @@ import 'package:productos_app/models/models.dart';
 import 'package:productos_app/providers/db_provider.dart';
 
 class UserListProvider extends ChangeNotifier {
-  List<UserModel> users = []; //TODO IMPLEMENTAR FIREBASE
+  List<UserModel> users = [];
   bool isLoading = true;
   late UserModel selectedUser;
   int? idUser;
@@ -32,6 +32,7 @@ class UserListProvider extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     final users = await DBProvider.db.getUserAll();
+    // ignore: unnecessary_null_comparison
     if (users == null) {
       isLoading = false;
       notifyListeners();
@@ -45,7 +46,6 @@ class UserListProvider extends ChangeNotifier {
 
   Future<bool> checkUserExists(
       {required String email, required String contrasena}) async {
-    //TODO cambiar con firebase
     final users = await DBProvider.db.getUserEmail(email);
     return users != null &&
         users.any(
@@ -57,7 +57,7 @@ class UserListProvider extends ChangeNotifier {
     final res =
         await db!.query('USUARIO', where: 'email = ?', whereArgs: [email]);
     int? userId = res.isNotEmpty ? res.first['id'] as int? : null;
-    print('getIdByEmail devuelve: $userId');
+
     return userId;
   }
 

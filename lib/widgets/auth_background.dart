@@ -7,7 +7,7 @@ class AuthBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       //color: Colors.indigo,
       width: double.infinity,
       height: double.infinity,
@@ -86,7 +86,7 @@ class _Box extends StatelessWidget {
 }
 
 class _Bubble extends StatelessWidget {
-  const _Bubble({super.key});
+  const _Bubble({});
 
   @override
   Widget build(BuildContext context) {

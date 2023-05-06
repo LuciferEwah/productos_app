@@ -23,7 +23,7 @@ class DBProvider {
   Future<Database> initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     final path = join(documentsDirectory.path, 'ProductosDB.db');
-    print(path);
+
     return await openDatabase(path, version: 3,
         onCreate: (Database db, int version) async {
       // Crea la tabla 'usuario'
@@ -107,12 +107,11 @@ class DBProvider {
       throw Exception('no hay stock');
     }
     final updatedProduct = ProductModel(
-      id: product.id,
-      nombre: product.nombre,
-      precio: product.precio,
-      stock: newQuantity,
-      imagen: product.imagen
-    );
+        id: product.id,
+        nombre: product.nombre,
+        precio: product.precio,
+        stock: newQuantity,
+        imagen: product.imagen);
     return await db.updateProduct(updatedProduct);
   }
 

@@ -79,7 +79,7 @@ class LoginScreen extends StatelessWidget {
 }
 
 class _LoginFrom extends StatelessWidget {
-  const _LoginFrom({super.key});
+  const _LoginFrom();
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +146,6 @@ class _LoginFrom extends StatelessWidget {
                       bool userExists = await userListProvider.checkUserExists(
                           email: loginFrom.email,
                           contrasena: loginFrom.contrasena);
-                      print(userExists);
 
                       if (userExists) {
                         loginFrom.isLoading = false;
@@ -158,7 +157,7 @@ class _LoginFrom extends StatelessWidget {
                         Navigator.pushReplacementNamed(context, 'home');
                       } else {
                         loginFrom.isLoading = false;
-                        print('El usuario no existe');
+
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Usuario o contraseña incorrectos'),

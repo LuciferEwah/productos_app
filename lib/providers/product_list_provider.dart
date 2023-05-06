@@ -115,7 +115,6 @@ class ProductListProvider extends ChangeNotifier {
 
     // Llamar a la función addVenta() para agregar la venta a la base de datos
     int ventaId = await DBProvider.db.addVenta(venta);
-    print('Venta agregada con éxito con ID: $ventaId');
 
 // Agregar detalles de la venta
     for (int index = 0; index < productsForCard.length; index++) {
@@ -131,8 +130,7 @@ class ProductListProvider extends ChangeNotifier {
         subtotal:
             product.precio * cantidadProducto, // Modifica el subtotal aquí
       );
-      int detalleVentaId = await DBProvider.db.addDetalleVenta(detalleVenta);
-      print('Detalle de venta agregado con éxito con ID: $detalleVentaId');
+      await DBProvider.db.addDetalleVenta(detalleVenta);
 
       // También asegúrate de utilizar la cantidad correcta aquí
       await DBProvider.db.discountItemQuantity(product.id!, cantidadProducto);

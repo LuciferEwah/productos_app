@@ -63,9 +63,7 @@ BoxDecoration _cardBorders() => BoxDecoration(
         ]);
 
 class _NotAvailabel extends StatelessWidget {
-  const _NotAvailabel({
-    super.key,
-  });
+  const _NotAvailabel();
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +92,6 @@ class _NotAvailabel extends StatelessWidget {
 
 class _Price extends StatelessWidget {
   const _Price({
-    super.key,
     required this.price,
   });
 
@@ -126,7 +123,6 @@ class _Price extends StatelessWidget {
 
 class _DetailsProduct extends StatelessWidget {
   const _DetailsProduct({
-    super.key,
     required this.product,
     required this.productListProvider, // Agrega la instancia de ProductListProvider
   });
@@ -164,19 +160,22 @@ class _DetailsProduct extends StatelessWidget {
               ],
             ),
             ElevatedButton(
-              onPressed: product.stock > 0 ? () {
-                bool productAdded = productListProvider.addToCart(product);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: productAdded
-                        ? Text(
-                            'Producto agregado al carrito: ${product.nombre}')
-                        : Text(
-                            'El producto ya está en el carrito: ${product.nombre}'),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              } : null,
+              onPressed: product.stock > 0
+                  ? () {
+                      bool productAdded =
+                          productListProvider.addToCart(product);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: productAdded
+                              ? Text(
+                                  'Producto agregado al carrito: ${product.nombre}')
+                              : Text(
+                                  'El producto ya está en el carrito: ${product.nombre}'),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
                 foregroundColor: Colors.orange[700],
@@ -197,7 +196,6 @@ class _DetailsProduct extends StatelessWidget {
 
 class _BackgroundImage extends StatelessWidget {
   const _BackgroundImage({
-    super.key,
     this.url,
   });
 
