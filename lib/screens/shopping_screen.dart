@@ -41,9 +41,9 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
 
   void removeProduct(ProductModel product) {
     setState(() {
-      products.remove(product);
+      Provider.of<ProductListProvider>(context, listen: false)
+          .removeProductFromCart(product);
       cantidad.remove(product.id); // Elimina la entrada en el mapa 'cantidad'
-      Provider.of<ProductListProvider>(context, listen: false);
     });
   }
 
@@ -164,18 +164,20 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
             width: MediaQuery.of(context).size.width,
             child: ElevatedButton(
               onPressed: () async {
-                if(products.isNotEmpty){
-
+                if (products.isNotEmpty) {
                   bool has_stock = true;
                   // Verificar el stock de todos los productos en el carrito
                   for (var product in products) {
                     int productId = product.id!;
                     int selectedQuantity = cantidad[productId] ?? 1;
-                    bool currentProductHasStock = await productListProvider.checkStock(productId, selectedQuantity);
+                    bool currentProductHasStock = await productListProvider
+                        .checkStock(productId, selectedQuantity);
 
                     if (!currentProductHasStock) {
                       has_stock = false;
-                      final snackBar = SnackBar(content: Text('No hay suficiente stock para ${product.nombre}'));
+                      final snackBar = SnackBar(
+                          content: Text(
+                              'No hay suficiente stock para ${product.nombre}'));
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       break;
                     }
@@ -191,8 +193,14 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                         'Detalles de la compra: Productos: [$productList], Fecha: ${DateTime.now()}, Subtotal: ${subtotal.toStringAsFixed(2)}, IVA: ${iva.toStringAsFixed(2)}, Total: ${total.toStringAsFixed(2)}');
                     // Aquí se llama a la función realizarVenta() en ProductListProvider
                     await productListProvider.realizarVenta(
-                      subtotal, iva, total, usuarioId, cantidad);
-                    final snackBar = SnackBar(content: Text('Su compra se ha realizado exitosamente'));
+                        subtotal, iva, total, usuarioId, cantidad);
+
+                    // Llamar a clearCart() para limpiar el carrito en ProductListProvider
+                    productListProvider.clearCart();
+
+                    final snackBar = SnackBar(
+                        content:
+                            Text('Su compra se ha realizado exitosamente'));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     products = [];
                   }

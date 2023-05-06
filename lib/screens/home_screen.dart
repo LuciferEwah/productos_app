@@ -14,12 +14,6 @@ class HomeScreen extends StatelessWidget {
 
     if (productListProvider.isLoading) return const LoadingScreen();
 
-    //TODO: COMO ACCEDER A LA INFORMACION
-
-    // Obtener la lista de productos
-    //print(productListProvider);
-    //final products = productListProvider.products;
-    //print(products[2].id);
     print(productListProvider.productsForCard);
 
     return Scaffold(
@@ -90,11 +84,7 @@ class ButtonShoping extends StatelessWidget {
               minHeight: 16,
             ),
             child: Text(
-              productList
-                  .where((product) =>
-                      productListProvider.products.contains(product))
-                  .length
-                  .toString(),
+              productListProvider.productsForCard.length.toString(),
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 12,

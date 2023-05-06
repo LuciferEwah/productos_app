@@ -117,10 +117,12 @@ class ProductListProvider extends ChangeNotifier {
     int ventaId = await DBProvider.db.addVenta(venta);
     print('Venta agregada con éxito con ID: $ventaId');
 
-    // Agregar detalles de la venta
+// Agregar detalles de la venta
     for (int index = 0; index < productsForCard.length; index++) {
       ProductModel product = productsForCard[index];
-      int cantidadProducto = cantidadSeleccionada[index] ?? 1;
+
+      // Utiliza el ID del producto en lugar del índice para acceder a la cantidad
+      int cantidadProducto = cantidadSeleccionada[product.id!] ?? 1;
 
       DetalleVentaModel detalleVenta = DetalleVentaModel(
         ventaId: ventaId,
@@ -131,11 +133,23 @@ class ProductListProvider extends ChangeNotifier {
       );
       int detalleVentaId = await DBProvider.db.addDetalleVenta(detalleVenta);
       print('Detalle de venta agregado con éxito con ID: $detalleVentaId');
+
+      // También asegúrate de utilizar la cantidad correcta aquí
       await DBProvider.db.discountItemQuantity(product.id!, cantidadProducto);
       cargarProduct();
     }
 
     // Notificar a los listeners
+    notifyListeners();
+  }
+
+  void clearCart() {
+    productsForCard.clear();
+    notifyListeners();
+  }
+
+  void removeProductFromCart(ProductModel product) {
+    productsForCard.remove(product);
     notifyListeners();
   }
 }
