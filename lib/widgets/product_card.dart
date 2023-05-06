@@ -164,7 +164,7 @@ class _DetailsProduct extends StatelessWidget {
               ],
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: product.stock > 0 ? () {
                 bool productAdded = productListProvider.addToCart(product);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -176,12 +176,12 @@ class _DetailsProduct extends StatelessWidget {
                     duration: const Duration(seconds: 2),
                   ),
                 );
-              },
+              } : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
                 foregroundColor: Colors.orange[700],
               ),
-              child: const Text('Comprar'),
+              child: Text(product.stock > 0 ? 'Comprar' : 'No disponible'),
             ),
           ],
         ),

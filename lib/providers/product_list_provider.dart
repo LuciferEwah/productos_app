@@ -130,7 +130,7 @@ class ProductListProvider extends ChangeNotifier {
             product.precio * cantidadProducto, // Modifica el subtotal aquí
       );
       await DBProvider.db.discountItemQuantity(product.id!,22);
-      print('weoweoweoweo: $cantidadProducto');
+      print('weoweoweoweo: $cantidadProducto');// todo cambiar 22
       cargarProduct();
       int detalleVentaId = await DBProvider.db.addDetalleVenta(detalleVenta);
       print('Detalle de venta agregado con éxito con ID: $detalleVentaId');

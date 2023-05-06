@@ -164,33 +164,48 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
             width: MediaQuery.of(context).size.width,
             child:  ElevatedButton(
               onPressed: () async {
-                bool has_stock = true;
-                await Future.forEach(products, (ProductModel product) async {
-                  int index = products.indexOf(product);
-                  if (await productListProvider.checkStock(product.id!, cantidad[index]!)) {
-                    final snackBar = SnackBar(content: Text('No hay stock de ${product.nombre}'));
+                if(products.isNotEmpty){
+                  bool has_stock = true;
+                //TODO dolor
+                /*
+                  await Future.forEach(products, (ProductModel product) async {
+                    int index = products.indexOf(product);
+                    int stock = product.stock;
+                    int quantity =  cantidad[index] as int;
+
+                    if (stock != null && quantity != null) {
+                      num availableStock = stock - quantity;
+
+                      if (product.id != null && await productListProvider.checkStock(product.id!, quantity as int)) {
+                        final snackBar = SnackBar(content: Text('No hay stock de ${product.nombre}'));
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        has_stock = false;
+                      }
+                    }
+                  });
+                  */
+
+
+                  if (has_stock) {
+                    int? usuarioId = userListProvider.  idUser;
+                    print(usuarioId);
+                    var products = productListProvider.products;
+                    String productList =
+                        products.map((product) => product.nombre).join(', ');
+                    print(
+                        'Detalles de la compra: Productos: [$productList], Fecha: ${DateTime.now()}, Subtotal: ${subtotal.toStringAsFixed(2)}, IVA: ${iva.toStringAsFixed(2)}, Total: ${total.toStringAsFixed(2)}');
+                    // Aquí se llama a la función realizarVenta() en ProductListProvider
+                    /*await productListProvider.realizarVenta(
+                      subtotal, iva, total, usuarioId, cantidad);*/
+                    final snackBar = SnackBar(content: Text('Su compra se ha realizado exitosamente'));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    has_stock = false;
-                    return;
                   }
-                });
-
-                if (has_stock) {
-                  int? usuarioId = userListProvider.idUser;
-                  print(usuarioId);
-                  var products = productListProvider.products;
-                  String productList =
-                      products.map((product) => product.nombre).join(', ');
-                  print(
-                      'Detalles de la compra: Productos: [$productList], Fecha: ${DateTime.now()}, Subtotal: ${subtotal.toStringAsFixed(2)}, IVA: ${iva.toStringAsFixed(2)}, Total: ${total.toStringAsFixed(2)}');
-
-                  // Aquí se llama a la función realizarVenta() en ProductListProvider
-                await productListProvider.realizarVenta(
-                    subtotal, iva, total, usuarioId, cantidad);
-                  final snackBar = SnackBar(content: Text('Su compra se ha realizado exitosamente'));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  products = [];
                 }
+                else{
+                    final snackBar = SnackBar(content: Text('Carrito vacio'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                }
+
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange[700],
