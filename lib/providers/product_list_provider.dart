@@ -104,12 +104,13 @@ class ProductListProvider extends ChangeNotifier {
     return product.stock >= quantity;
   }
 
-  Future<void> realizarVenta(double subtotal, double iva, double total) async {
+  Future<void> realizarVenta(
+      double subtotal, double iva, double total, int? usuarioId) async {
     // Crear una instancia de VentaModel
     VentaModel venta = VentaModel(
       fecha: DateTime.now().toString(),
       total: total,
-      usuarioId: 1, // Aquí puedes proporcionar el ID de usuario actual
+      usuarioId: usuarioId, // Aquí puedes proporcionar el ID de usuario actual
     );
 
     // Llamar a la función addVenta() para agregar la venta a la base de datos

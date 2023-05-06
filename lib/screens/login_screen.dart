@@ -138,13 +138,12 @@ class _LoginFrom extends StatelessWidget {
 
                       loginFrom.isLoading = true;
                       Future.delayed(const Duration(seconds: 2));
-                      //TODO: VALIDAR SI EL LOGIN ES CORRECTO BACKEND
-                      print(loginFrom);
-                      print(loginFrom.email);
-                      print(loginFrom.contrasena);
 
-                      UserListProvider provider = UserListProvider();
-                      bool userExists = await provider.checkUserExists(
+                      // Accede al UserListProvider
+                      final userListProvider =
+                          Provider.of<UserListProvider>(context, listen: false);
+
+                      bool userExists = await userListProvider.checkUserExists(
                           email: loginFrom.email,
                           contrasena: loginFrom.contrasena);
                       print(userExists);
@@ -153,8 +152,9 @@ class _LoginFrom extends StatelessWidget {
                         loginFrom.isLoading = false;
 
                         Future<int?> logedId =
-                            provider.getIdByEmail(loginFrom.email);
-                        provider.idUser = await logedId;
+                            userListProvider.getIdByEmail(loginFrom.email);
+                        userListProvider.idUser = await logedId;
+
                         Navigator.pushReplacementNamed(context, 'home');
                       } else {
                         loginFrom.isLoading = false;

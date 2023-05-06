@@ -3,6 +3,7 @@ import 'package:productos_app/models/models.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/product_list_provider.dart';
+import '../providers/user_list_provider.dart';
 
 class ShoppingScreen extends StatefulWidget {
   const ShoppingScreen({Key? key}) : super(key: key);
@@ -56,6 +57,7 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
   @override
   Widget build(BuildContext context) {
     final productListProvider = Provider.of<ProductListProvider>(context);
+    final userListProvider = Provider.of<UserListProvider>(context);
 /*TODO     List<ProductModel> products =
         Provider.of<ProductListProvider>(context).productsForCard;
 */
@@ -167,6 +169,8 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
             width: MediaQuery.of(context).size.width,
             child: ElevatedButton(
               onPressed: () async {
+                int? usuarioId = userListProvider.idUser;
+                print(usuarioId);
                 final products = productListProvider.products;
                 String productList =
                     products.map((product) => product.nombre).join(', ');
@@ -174,7 +178,8 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                     'Detalles de la compra: Productos: [$productList], Fecha: ${DateTime.now()}, Subtotal: ${subtotal.toStringAsFixed(2)}, IVA: ${iva.toStringAsFixed(2)}, Total: ${total.toStringAsFixed(2)}');
 
                 // Aquí se llama a la función realizarVenta() en ProductListProvider
-                await productListProvider.realizarVenta(subtotal, iva, total);
+                await productListProvider.realizarVenta(
+                    subtotal, iva, total, usuarioId);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange[700],

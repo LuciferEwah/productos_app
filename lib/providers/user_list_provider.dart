@@ -56,7 +56,19 @@ class UserListProvider extends ChangeNotifier {
     final db = await DBProvider.db.database;
     final res =
         await db!.query('USUARIO', where: 'email = ?', whereArgs: [email]);
-    return res.isNotEmpty ? res.first['id'] as int? : null;
+    int? userId = res.isNotEmpty ? res.first['id'] as int? : null;
+    print('getIdByEmail devuelve: $userId');
+    return userId;
+  }
+
+  Future<void> loginUser(
+      {required String email, required String contrasena}) async {
+    if (await checkUserExists(email: email, contrasena: contrasena)) {
+      idUser = await getIdByEmail(email);
+      print('Usuario autenticado con id: $idUser');
+    } else {
+      print('Error al autenticar al usuario');
+    }
   }
 
   deleteById(int? id) async {
