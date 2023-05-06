@@ -77,6 +77,11 @@ class ProductListProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  deleteAllCart() async {
+    productsForCard = [];
+    notifyListeners();
+  }
+
   deleteById(int id) async {
     await DBProvider.db.deleteProductById(id);
     cargarProduct();
@@ -99,10 +104,24 @@ class ProductListProvider extends ChangeNotifier {
     return product.stock >= quantity;
   }
 
-  Future<void> buy(id,quantity) async {
-      await DBProvider.db.discountItemQuantity(id,quantity);
-      //TODO AGREGAR HISTORIAL A COMPRADOR?
-      cargarProduct();
+  Future<void> buy(int id, int quantity,int usuarioId) async {
+    await DBProvider.db.discountItemQuantity(id, quantity);
+    
+    final venta = VentaModel(
+      fecha: DateTime.now().toString(),
+      total: quantity * selectedProduct.precio,
+      usuarioId: usuarioId, 
+    );
+    
+    final detalleVenta = DetalleVentaModel(
+      productoId: id,
+      cantidad: quantity,
+      subtotal: quantity * selectedProduct.precio, 
+      ventaId: null,//null temporal
+    );
+    
+    await DBProvider.db.addVentaAndDetalleVenta(venta, [detalleVenta]);
+    cargarProduct();
   }
 
 

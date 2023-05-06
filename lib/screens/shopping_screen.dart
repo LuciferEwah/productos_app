@@ -171,15 +171,16 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                 
                 products.asMap().forEach((index, product) async{
                   if (await productListProvider.checkStock(product.id!,cantidad[index]!)){
-                    productListProvider.buy(product.id,cantidad[index]);
+                    productListProvider.buy(product.id!,cantidad[index]!,1);//TODO PONER ID USUARIO
                     final snackBar = SnackBar(content: Text('Su compra se ha realizado exitosamente'));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    products = [];
                   }
                   else{
                     final snackBar = SnackBar(content: Text('No hay stock de ${product.nombre}'));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
+                productListProvider.deleteAllCart();
+                products = [];
                 });
 /*                products.asMap().forEach((index, product) {
                   print(
