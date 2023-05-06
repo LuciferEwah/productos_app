@@ -4,6 +4,7 @@ import 'package:productos_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 import '../interface/input_decorations.dart';
 import '../providers/user_list_provider.dart';
+import 'package:flutter/services.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -57,21 +58,6 @@ class LoginScreen extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context,
-                  'admin'); // Replace 'login' with the name of your desired route
-            },
-            child: const Text(
-              'Admin',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          )
         ],
       )),
     ));
@@ -110,7 +96,9 @@ class _LoginFrom extends StatelessWidget {
             TextFormField(
                 autocorrect: false,
                 obscureText: true,
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.visiblePassword,
+                autofillHints:
+                    null, // Agrega esta línea para desactivar las sugerencias de autocompletado
                 decoration: InputDecorations.authInputDecotaration(
                     hintText: '*******',
                     labelText: 'Contraseña',

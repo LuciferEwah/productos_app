@@ -30,43 +30,51 @@ class _ProductScreenBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final productFrom = Provider.of<ProductFromProvider>(context);
     return Scaffold(
-      body: SingleChildScrollView(
-          //keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      body: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom *
+              0.25, // Modifica el espacio en la parte inferior cuando el teclado está abierto
+        ),
+        child: SingleChildScrollView(
+          reverse:
+              true, // Comienza el desplazamiento desde la parte inferior de la pantalla
           child: Column(
-        children: [
-          Stack(
             children: [
-              ProductImg(
-                url: productListProvider.selectedProduct.imagen,
+              Stack(
+                children: [
+                  ProductImg(
+                    url: productListProvider.selectedProduct.imagen,
+                  ),
+                  Positioned(
+                      top: 60,
+                      left: 20,
+                      child: IconButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            size: 40,
+                            color: Colors.white,
+                          ))),
+                  Positioned(
+                      top: 60,
+                      right: 30,
+                      child: IconButton(
+                          onPressed: () async {
+                            String path = await uploadImage();
+                            productListProvider.updateSelectProductImage(path);
+                          },
+                          icon: const Icon(
+                            Icons.camera_alt_outlined,
+                            size: 40,
+                            color: Colors.white,
+                          )))
+                ],
               ),
-              Positioned(
-                  top: 60,
-                  left: 20,
-                  child: IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        size: 40,
-                        color: Colors.white,
-                      ))),
-              Positioned(
-                  top: 60,
-                  right: 30,
-                  child: IconButton(
-                      onPressed: () async {
-                        String path = await uploadImage();
-                        productListProvider.updateSelectProductImage(path);
-                      },
-                      icon: const Icon(
-                        Icons.camera_alt_outlined,
-                        size: 40,
-                        color: Colors.white,
-                      )))
+              const _ProductFrom()
             ],
           ),
-          const _ProductFrom()
-        ],
-      )),
+        ),
+      ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(right: 30),
         child:

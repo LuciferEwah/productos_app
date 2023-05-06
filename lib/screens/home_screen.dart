@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.admin_panel_settings_outlined),
           onPressed: () {
-            // Acción cuando se presione el botón
+            Navigator.pushNamed(context, 'admin');
           },
         ),
         title: const Text('Productos'),

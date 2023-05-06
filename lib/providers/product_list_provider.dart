@@ -33,13 +33,14 @@ class ProductListProvider extends ChangeNotifier {
     return false; // Producto ya está en el carrito
   }
 
-  newProduct(
-      {required String nombre,
-      String? categoria,
-      required double precio,
-      required int stock,
-      String? imagen,
-      int? id}) async {
+  Future<void> newProduct({
+    required String nombre,
+    String? categoria,
+    required double precio,
+    required int stock,
+    String? imagen,
+    int? id,
+  }) async {
     final newProduct = ProductModel(
       nombre: nombre,
       categoria: categoria,
@@ -49,8 +50,11 @@ class ProductListProvider extends ChangeNotifier {
       id: id,
     );
 
-    await DBProvider.db.newProduct(newProduct);
-    products.add(newProduct);
+    // Inserta el producto en la base de datos y obtén el producto con su ID actualizado.
+    final insertedProduct = await DBProvider.db.newProduct(newProduct);
+
+    // Actualiza la lista de productos y notifica a los listeners.
+    products.add(insertedProduct);
     notifyListeners();
   }
 
@@ -90,6 +94,7 @@ class ProductListProvider extends ChangeNotifier {
   update(product) async {
     await DBProvider.db.updateProduct(product);
     cargarProduct();
+    notifyListeners();
   }
 
   void updateSelectProductImage(String path) {

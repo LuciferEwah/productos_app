@@ -42,11 +42,13 @@ class DBProvider {
   }
 
 //////////////////////////////////////////////// producto ////////////////////////////////////////////////
-  Future<int?> newProduct(ProductModel newProduct) async {
+  Future<ProductModel> newProduct(ProductModel newProduct) async {
     final db = await database;
     final res = await db?.insert('PRODUCTO', newProduct.toJson());
-    //Es el ID del ultimo resgistro insertado
-    return res;
+
+    // Asigna el id generado automáticamente al producto y lo devuelve.
+    newProduct.id = res;
+    return newProduct;
   }
 
   Future<ProductModel> getProductById(int id) async {
@@ -116,11 +118,12 @@ class DBProvider {
   }
 
 //////////////////////////////////////////////// usuario ////////////////////////////////////////////////
-  Future<int?> newUser(UserModel newUser) async {
+  Future<UserModel> newUser(UserModel newUser) async {
     final db = await database;
     final res = await db?.insert('USUARIO', newUser.toJson());
-    //Es el ID del ultimo resgistro insertado
-    return res;
+    // Asigna el ID generado automáticamente al usuario y lo devuelve.
+    newUser.id = res;
+    return newUser;
   }
 
   getUserEmail(String email) async {
