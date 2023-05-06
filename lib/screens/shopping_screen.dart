@@ -167,19 +167,35 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
           const Divider(),
           SizedBox(
             width: MediaQuery.of(context).size.width,
-            child: ElevatedButton(
+            child:  ElevatedButton(
               onPressed: () async {
-                int? usuarioId = userListProvider.idUser;
-                print(usuarioId);
-                final products = productListProvider.products;
-                String productList =
-                    products.map((product) => product.nombre).join(', ');
-                print(
-                    'Detalles de la compra: Productos: [$productList], Fecha: ${DateTime.now()}, Subtotal: ${subtotal.toStringAsFixed(2)}, IVA: ${iva.toStringAsFixed(2)}, Total: ${total.toStringAsFixed(2)}');
+                bool has_stock = true;
+                await Future.forEach(products, (ProductModel product) async {
+                  int index = products.indexOf(product);
+                  if (await productListProvider.checkStock(product.id!, cantidad[index]!)) {
+                    final snackBar = SnackBar(content: Text('No hay stock de ${product.nombre}'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    has_stock = false;
+                    return;
+                  }
+                });
 
-                // Aquí se llama a la función realizarVenta() en ProductListProvider
-                await productListProvider.realizarVenta(
-                    subtotal, iva, total, usuarioId);
+                if (has_stock) {
+                  int? usuarioId = userListProvider.idUser;
+                  print(usuarioId);
+                  var products = productListProvider.products;
+                  String productList =
+                      products.map((product) => product.nombre).join(', ');
+                  print(
+                      'Detalles de la compra: Productos: [$productList], Fecha: ${DateTime.now()}, Subtotal: ${subtotal.toStringAsFixed(2)}, IVA: ${iva.toStringAsFixed(2)}, Total: ${total.toStringAsFixed(2)}');
+
+                  // Aquí se llama a la función realizarVenta() en ProductListProvider
+                  await productListProvider.realizarVenta(
+                      subtotal, iva, total, usuarioId);
+                  final snackBar = SnackBar(content: Text('Su compra se ha realizado exitosamente'));
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  products = [];
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange[700],
