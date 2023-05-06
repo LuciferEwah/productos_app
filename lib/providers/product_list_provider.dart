@@ -131,6 +131,8 @@ class ProductListProvider extends ChangeNotifier {
       );
       int detalleVentaId = await DBProvider.db.addDetalleVenta(detalleVenta);
       print('Detalle de venta agregado con éxito con ID: $detalleVentaId');
+      await DBProvider.db.discountItemQuantity(product.id!, cantidadProducto);
+      cargarProduct();
     }
 
     // Notificar a los listeners
