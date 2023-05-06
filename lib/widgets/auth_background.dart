@@ -86,7 +86,7 @@ class _Box extends StatelessWidget {
 }
 
 class _Bubble extends StatelessWidget {
-  const _Bubble({});
+  const _Bubble();
 
   @override
   Widget build(BuildContext context) {

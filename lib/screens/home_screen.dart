@@ -16,6 +16,12 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.admin_panel_settings_outlined),
+          onPressed: () {
+            // Acción cuando se presione el botón
+          },
+        ),
         title: const Text('Productos'),
         centerTitle: true,
         actions: [

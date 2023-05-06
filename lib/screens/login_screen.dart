@@ -154,10 +154,12 @@ class _LoginFrom extends StatelessWidget {
                             userListProvider.getIdByEmail(loginFrom.email);
                         userListProvider.idUser = await logedId;
 
+                        // ignore: use_build_context_synchronously
                         Navigator.pushReplacementNamed(context, 'home');
                       } else {
                         loginFrom.isLoading = false;
 
+                        // ignore: use_build_context_synchronously
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Usuario o contraseña incorrectos'),
