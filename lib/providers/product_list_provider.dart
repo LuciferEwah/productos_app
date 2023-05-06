@@ -104,8 +104,8 @@ class ProductListProvider extends ChangeNotifier {
     return product.stock >= quantity;
   }
 
-  Future<void> realizarVenta(
-      double subtotal, double iva, double total, int? usuarioId) async {
+  Future<void> realizarVenta(double subtotal, double iva, double total,
+      int? usuarioId, Map<int, int> cantidadSeleccionada) async {
     // Crear una instancia de VentaModel
     VentaModel venta = VentaModel(
       fecha: DateTime.now().toString(),
@@ -118,14 +118,16 @@ class ProductListProvider extends ChangeNotifier {
     print('Venta agregada con éxito con ID: $ventaId');
 
     // Agregar detalles de la venta
-    for (ProductModel product in productsForCard) {
+    for (int index = 0; index < productsForCard.length; index++) {
+      ProductModel product = productsForCard[index];
+      int cantidadProducto = cantidadSeleccionada[index] ?? 1;
+
       DetalleVentaModel detalleVenta = DetalleVentaModel(
         ventaId: ventaId,
         productoId: product.id!,
-        cantidad:
-            1, // Aquí puedes proporcionar la cantidad de producto comprada
-        subtotal: product
-            .precio, // Aquí puedes proporcionar el subtotal para este producto
+        cantidad: cantidadProducto, // Usa la cantidad seleccionada aquí
+        subtotal:
+            product.precio * cantidadProducto, // Modifica el subtotal aquí
       );
 
       int detalleVentaId = await DBProvider.db.addDetalleVenta(detalleVenta);

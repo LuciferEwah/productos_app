@@ -179,7 +179,7 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
 
                 // Aquí se llama a la función realizarVenta() en ProductListProvider
                 await productListProvider.realizarVenta(
-                    subtotal, iva, total, usuarioId);
+                    subtotal, iva, total, usuarioId, cantidad);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange[700],
