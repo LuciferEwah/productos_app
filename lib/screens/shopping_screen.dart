@@ -162,12 +162,12 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
           const Divider(),
           SizedBox(
             width: MediaQuery.of(context).size.width,
-            child:  ElevatedButton(
+            child: ElevatedButton(
               onPressed: () async {
-                if(products.isNotEmpty){
+                if (products.isNotEmpty) {
                   bool has_stock = true;
-                //TODO dolor
-                /*
+                  //TODO dolor
+                  /*
                   await Future.forEach(products, (ProductModel product) async {
                     int index = products.indexOf(product);
                     int stock = product.stock;
@@ -185,27 +185,27 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                   });
                   */
 
-
                   if (has_stock) {
-                    int? usuarioId = userListProvider.  idUser;
+                    int? usuarioId = userListProvider.idUser;
                     print(usuarioId);
-                    var products = productListProvider.products;
+                    products = productListProvider.productsForCard;
                     String productList =
                         products.map((product) => product.nombre).join(', ');
                     print(
                         'Detalles de la compra: Productos: [$productList], Fecha: ${DateTime.now()}, Subtotal: ${subtotal.toStringAsFixed(2)}, IVA: ${iva.toStringAsFixed(2)}, Total: ${total.toStringAsFixed(2)}');
                     // Aquí se llama a la función realizarVenta() en ProductListProvider
-                    /*await productListProvider.realizarVenta(
-                      subtotal, iva, total, usuarioId, cantidad);*/
-                    final snackBar = SnackBar(content: Text('Su compra se ha realizado exitosamente'));
+                    await productListProvider.realizarVenta(
+                        subtotal, iva, total, usuarioId, cantidad);
+                    final snackBar = SnackBar(
+                        content:
+                            Text('Su compra se ha realizado exitosamente'));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    products = [];
                   }
+                } else {
+                  final snackBar = SnackBar(content: Text('Carrito vacio'));
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
-                else{
-                    final snackBar = SnackBar(content: Text('Carrito vacio'));
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }
-
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange[700],
