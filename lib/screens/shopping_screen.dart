@@ -21,8 +21,8 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
     super.initState();
     products = Provider.of<ProductListProvider>(context, listen: false)
         .productsForCard;
-    products.asMap().forEach((index, product) {
-      cantidad[index] = 1;
+    products.forEach((product) {
+      cantidad[product.id!] = 1;
     });
   }
 
@@ -31,11 +31,7 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
       return 0;
     }
     return products
-        .map((p) => p.precio)
-        .toList()
-        .asMap()
-        .entries
-        .map((e) => e.value * cantidad[e.key]!)
+        .map((p) => p.precio * cantidad[p.id]!)
         .reduce((a, b) => a + b);
   }
 
@@ -44,14 +40,11 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
   double get total => subtotal + iva;
 
   void removeProduct(ProductModel product) {
-    final int index = products.indexOf(product);
-    if (index >= 0) {
-      setState(() {
-        products.removeAt(index);
-        cantidad.remove(index);
-        Provider.of<ProductListProvider>(context, listen: false);
-      });
-    }
+    setState(() {
+      products.remove(product);
+      cantidad.remove(product.id); // Elimina la entrada en el mapa 'cantidad'
+      Provider.of<ProductListProvider>(context, listen: false);
+    });
   }
 
   @override
@@ -95,25 +88,27 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                     child: ListTile(
                       title: Text(product.nombre),
                       subtitle: Text(
-                          '\$${product.precio.toStringAsFixed(2)} x ${cantidad[index] ?? 1}'),
+                          '\$${product.precio.toStringAsFixed(2)} x ${cantidad[product.id] ?? 1}'),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
                             onPressed: () {
-                              if (cantidad[index] != null &&
-                                  cantidad[index]! > 1) {
-                                cantidad[index] = cantidad[index]! - 1;
+                              if (cantidad[product.id] != null &&
+                                  cantidad[product.id]! > 1) {
+                                cantidad[product.id!] =
+                                    cantidad[product.id]! - 1;
                               }
                               setState(() {});
                             },
                             icon: const Icon(Icons.remove),
                           ),
-                          Text('${cantidad[index] ?? 1}'),
+                          Text('${cantidad[product.id] ?? 1}'),
                           IconButton(
                             onPressed: () {
                               setState(() {
-                                cantidad[index] = (cantidad[index] ?? 1) + 1;
+                                cantidad[product.id!] =
+                                    (cantidad[product.id] ?? 1) + 1;
                               });
                             },
                             icon: const Icon(Icons.add),
@@ -190,8 +185,8 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                       'Detalles de la compra: Productos: [$productList], Fecha: ${DateTime.now()}, Subtotal: ${subtotal.toStringAsFixed(2)}, IVA: ${iva.toStringAsFixed(2)}, Total: ${total.toStringAsFixed(2)}');
 
                   // Aquí se llama a la función realizarVenta() en ProductListProvider
-                  await productListProvider.realizarVenta(
-                      subtotal, iva, total, usuarioId);
+                await productListProvider.realizarVenta(
+                    subtotal, iva, total, usuarioId, cantidad);
                   final snackBar = SnackBar(content: Text('Su compra se ha realizado exitosamente'));
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   products = [];
