@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         'producto': (_) => const ProductScreen(),
         'register': (_) => const RegisterScreen(),
         'carrito': (_) => const ShoppingScreen(),
-        'admin': (_) =>  const UserListPage(),
+        'admin': (_) => const UserListPage(),
       },
       theme: ThemeData.light().copyWith(
           scaffoldBackgroundColor: Colors.grey[400],

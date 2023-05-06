@@ -40,6 +40,7 @@ class DBProvider {
           'CREATE TABLE DETALLE_VENTA (id INTEGER PRIMARY KEY, venta_id INTEGER, producto_id INTEGER, cantidad INTEGER, subtotal REAL, FOREIGN KEY(venta_id) REFERENCES VENTA(id), FOREIGN KEY(producto_id) REFERENCES PRODUCTO(id))');
     });
   }
+
 //////////////////////////////////////////////// producto ////////////////////////////////////////////////
   Future<int?> newProduct(ProductModel newProduct) async {
     final db = await database;
@@ -97,23 +98,22 @@ class DBProvider {
     final res = await db!.delete('PRODUCTO');
     return res;
   }
-  
 
-Future<int?> discountItemQuantity(int id, int quantity) async {
-  final db = DBProvider.db;
-  final product = await db.getProductById(id);
-  final newQuantity = product.stock - quantity;
-  if (newQuantity < 0) {
-    throw Exception('no hay stock');
+  Future<int?> discountItemQuantity(int id, int quantity) async {
+    final db = DBProvider.db;
+    final product = await db.getProductById(id);
+    final newQuantity = product.stock - quantity;
+    if (newQuantity < 0) {
+      throw Exception('no hay stock');
+    }
+    final updatedProduct = ProductModel(
+      id: product.id,
+      nombre: product.nombre,
+      precio: product.precio,
+      stock: newQuantity,
+    );
+    return await db.updateProduct(updatedProduct);
   }
-  final updatedProduct = ProductModel(
-    id: product.id,
-    nombre: product.nombre,
-    precio: product.precio,
-    stock: newQuantity,
-  );
-  return await db.updateProduct(updatedProduct);
-}
 
 //////////////////////////////////////////////// usuario ////////////////////////////////////////////////
   Future<int?> newUser(UserModel newUser) async {
@@ -133,9 +133,7 @@ Future<int?> discountItemQuantity(int id, int quantity) async {
   Future<List<UserModel>> getUserAll() async {
     final db = await database;
     final res = await db!.query('USUARIO');
-    return res.isNotEmpty
-        ? res.map((e) => UserModel.fromJson(e)).toList()
-        : [];
+    return res.isNotEmpty ? res.map((e) => UserModel.fromJson(e)).toList() : [];
   }
 
   Future<int?> deleteUserById(int id) async {
@@ -144,22 +142,17 @@ Future<int?> discountItemQuantity(int id, int quantity) async {
     return res;
   }
   //////////////////////////////////////////////// venta ////////////////////////////////////////////////
-  Future<void> addVentaAndDetalleVenta(VentaModel venta, List<DetalleVentaModel> detallesVenta) async {
-  final db = await DBProvider.db.database;
 
-  // Insertar venta
-  final ventaId = await db!.insert('VENTA', venta.toJson());
-
-  // Insertar detallesVenta
-  for (final detalleVenta in detallesVenta) {
-    final Map<String, dynamic> detalleVentaData = {
-      'producto_id': detalleVenta.productoId,
-      'cantidad': detalleVenta.cantidad,
-      'subtotal': detalleVenta.subtotal,
-      'venta_id': ventaId,
-    };
-    await db.insert('DETALLE_VENTA', detalleVentaData);
+  Future<int> addVenta(VentaModel venta) async {
+    final db = await database;
+    final ventaId = await db!.insert('VENTA', venta.toJson());
+    return ventaId;
   }
-}
 
+  Future<int> addDetalleVenta(DetalleVentaModel detallesVenta) async {
+    final db = await database;
+    final detalleVentaId =
+        await db!.insert('DETALLE_VENTA', detallesVenta.toJson());
+    return detalleVentaId;
+  }
 }

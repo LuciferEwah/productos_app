@@ -151,6 +151,7 @@ class _LoginFrom extends StatelessWidget {
 
                       if (userExists) {
                         loginFrom.isLoading = false;
+
                         Navigator.pushReplacementNamed(context, 'home');
                       } else {
                         loginFrom.isLoading = false;

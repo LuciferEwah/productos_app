@@ -167,30 +167,14 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
             width: MediaQuery.of(context).size.width,
             child: ElevatedButton(
               onPressed: () async {
-                // Acción del botón de pago                
-                
-                products.asMap().forEach((index, product) async{
-                  if (await productListProvider.checkStock(product.id!,cantidad[index]!)){
-                    productListProvider.buy(product.id!,cantidad[index]!,1);//TODO PONER ID USUARIO
-                    final snackBar = SnackBar(content: Text('Su compra se ha realizado exitosamente'));
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }
-                  else{
-                    final snackBar = SnackBar(content: Text('No hay stock de ${product.nombre}'));
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }
-                productListProvider.deleteAllCart();
-                products = [];
-                });
-/*                products.asMap().forEach((index, product) {
-                  print(
-                      'ID: ${product.id}, NOMBRE: ${product.nombre}, PRECIO: ${product.precio.toStringAsFixed(2)}, Cantidad: ${cantidad[index]}');
-                });*/
-                print('Detalles de la compra:');
-                print('Fecha: ${DateTime.now()}');
-                print('Subtotal: ${subtotal.toStringAsFixed(2)}');
-                print('IVA: ${iva.toStringAsFixed(2)}');
-                print('Total: ${total.toStringAsFixed(2)}');
+                final products = productListProvider.products;
+                String productList =
+                    products.map((product) => product.nombre).join(', ');
+                print(
+                    'Detalles de la compra: Productos: [$productList], Fecha: ${DateTime.now()}, Subtotal: ${subtotal.toStringAsFixed(2)}, IVA: ${iva.toStringAsFixed(2)}, Total: ${total.toStringAsFixed(2)}');
+
+                // Aquí se llama a la función realizarVenta() en ProductListProvider
+                await productListProvider.realizarVenta(subtotal, iva, total);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange[700],
@@ -207,5 +191,3 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
     );
   }
 }
-
-

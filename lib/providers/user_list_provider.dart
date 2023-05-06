@@ -8,7 +8,7 @@ class UserListProvider extends ChangeNotifier {
   List<UserModel> users = []; //TODO IMPLEMENTAR FIREBASE
   bool isLoading = true;
   late UserModel selectedUser;
-
+  int? idUser;
 
   UserListProvider() {
     cargarUser();
@@ -58,7 +58,6 @@ class UserListProvider extends ChangeNotifier {
       cargarUser();
     }
   }
-
 
 /*
   update(user) async {

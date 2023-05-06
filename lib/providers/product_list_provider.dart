@@ -104,26 +104,34 @@ class ProductListProvider extends ChangeNotifier {
     return product.stock >= quantity;
   }
 
-  Future<void> buy(int id, int quantity,int usuarioId) async {
-    await DBProvider.db.discountItemQuantity(id, quantity);
-    
-    final venta = VentaModel(
+  Future<void> realizarVenta(double subtotal, double iva, double total) async {
+    // Crear una instancia de VentaModel
+    VentaModel venta = VentaModel(
       fecha: DateTime.now().toString(),
-      total: quantity * selectedProduct.precio,
-      usuarioId: usuarioId, 
+      total: total,
+      usuarioId: 1, // Aquí puedes proporcionar el ID de usuario actual
     );
-    
-    final detalleVenta = DetalleVentaModel(
-      productoId: id,
-      cantidad: quantity,
-      subtotal: quantity * selectedProduct.precio, 
-      ventaId: null,//null temporal
-    );
-    
-    await DBProvider.db.addVentaAndDetalleVenta(venta, [detalleVenta]);
-    cargarProduct();
+
+    // Llamar a la función addVenta() para agregar la venta a la base de datos
+    int ventaId = await DBProvider.db.addVenta(venta);
+    print('Venta agregada con éxito con ID: $ventaId');
+
+    // Agregar detalles de la venta
+    for (ProductModel product in productsForCard) {
+      DetalleVentaModel detalleVenta = DetalleVentaModel(
+        ventaId: ventaId,
+        productoId: product.id!,
+        cantidad:
+            1, // Aquí puedes proporcionar la cantidad de producto comprada
+        subtotal: product
+            .precio, // Aquí puedes proporcionar el subtotal para este producto
+      );
+
+      int detalleVentaId = await DBProvider.db.addDetalleVenta(detalleVenta);
+      print('Detalle de venta agregado con éxito con ID: $detalleVentaId');
+    }
+
+    // Notificar a los listeners
+    notifyListeners();
   }
-
-
-
 }
