@@ -164,4 +164,34 @@ class DBProvider {
         await db!.insert('DETALLE_VENTA', detallesVenta.toJson());
     return detalleVentaId;
   }
+//////////////////////////////////////////////// planes ////////////////////////////////////////////////
+
+  Future<PlanModel> newPlan(PlanModel newPlan) async {
+    final db = await database;
+    final res = await db?.insert('PLANES_DE_SUSCRIPCION', newPlan.toJson());
+    // Asigna el ID generado automáticamente al usuario y lo devuelve.
+    newPlan.id = res;
+    return newPlan;
+  }
+
+  Future<int?> deletePlanByID(int id) async {
+    //matar por id al plan?
+    final db = await database;
+    final res = await db!
+        .delete('PLANES_DE_SUSCRIPCION', where: 'id = ?', whereArgs: [id]);
+    return res;
+  }
+
+  Future<List<PlanModel>> getPlans() async {
+    final db = await database;
+    final res = await db!.query('PLANES_DE_SUSCRIPCION');
+    return res.isNotEmpty ? res.map((e) => PlanModel.fromJson(e)).toList() : [];
+  }
+
+  Future<int?> updatePlan(PlanModel updatePlan) async {
+    final db = await database;
+    final res = await db!.update('PLANES_DE_SUSCRIPCION', updatePlan.toJson(),
+        where: 'id = ?', whereArgs: [updatePlan.id]);
+    return res;
+  }
 }

@@ -1,27 +1,26 @@
 import 'dart:convert';
 
-class PlanesDeSuscripcion {
-  int id;
+class PlanModel {
+  int? id;
   String nombre;
   double precioMensual;
   int duracionMeses;
   bool renovacionAutomatica;
 
-  PlanesDeSuscripcion({
-    required this.id,
+  PlanModel({
+    this.id,
     required this.nombre,
     required this.precioMensual,
     required this.duracionMeses,
     required this.renovacionAutomatica,
   });
 
-  factory PlanesDeSuscripcion.fromRawJson(String str) =>
-      PlanesDeSuscripcion.fromJson(json.decode(str));
+  factory PlanModel.fromRawJson(String str) =>
+      PlanModel.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory PlanesDeSuscripcion.fromJson(Map<String, dynamic> json) =>
-      PlanesDeSuscripcion(
+  factory PlanModel.fromJson(Map<String, dynamic> json) => PlanModel(
         id: json["id"],
         nombre: json["nombre"],
         precioMensual: json["precio_mensual"]?.toDouble(),
