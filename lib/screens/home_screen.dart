@@ -78,7 +78,7 @@ class HomeScreen extends StatelessWidget {
                   },
                 ),
               ),
-              const PlanScreen(),
+              PlanScreen(),
             ],
           );
         },
