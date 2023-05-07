@@ -20,15 +20,25 @@ class DBProvider {
     }
   }
 
+//TODO: agregar a la base de datos suscripciones y planes
   Future<Database> initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    final path = join(documentsDirectory.path, 'ProductosDB.db');
+    final path = join(documentsDirectory.path, 'ProductosDB2.db');
 
-    return await openDatabase(path, version: 3,
+    return await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
       // Crea la tabla 'usuario'
       await db.execute(
-          'CREATE TABLE USUARIO (id INTEGER PRIMARY KEY, email TEXT, contrasena TEXT)');
+          'CREATE TABLE USUARIO (id INTEGER PRIMARY KEY, email TEXT, rol TEXT)');
+
+      // Crea la tabla 'planes_de_suscripcion'
+      await db.execute(
+          'CREATE TABLE PLANES_DE_SUSCRIPCION (id INTEGER PRIMARY KEY, nombre TEXT, precio_mensual REAL, duracion_meses INT, renovacion_automatica INTEGER)');
+
+      // Crea la tabla 'suscripciones'
+      await db.execute(
+          'CREATE TABLE SUSCRIPCIONES (id INTEGER PRIMARY KEY, fecha_inicio DATE, fecha_fin DATE, estado TEXT, id_usuario INTEGER, id_plan INTEGER, FOREIGN KEY (id_usuario) REFERENCES USUARIO (id), FOREIGN KEY (id_plan) REFERENCES PLANES_DE_SUSCRIPCION (id))');
+
       // Crea la tabla 'producto'
       await db.execute(
           'CREATE TABLE PRODUCTO (id INTEGER PRIMARY KEY, nombre TEXT, categoria TEXT, precio REAL, stock INTEGER, imagen TEXT)');
