@@ -6,100 +6,114 @@ class PlanCard extends StatelessWidget {
   const PlanCard({
     Key? key,
     required this.plan,
-    this.trailing, // Agrega el parámetro aquí
-    required this.planListProvider, // Agrega la instancia de PlanListProvider
+    this.trailing,
+    this.planListProvider,
   }) : super(key: key);
 
   final PlanModel plan;
-  final Widget? trailing; // Declara el parámetro aquí
-  final PlanListProvider planListProvider;
+  final Widget? trailing;
+  final PlanListProvider? planListProvider;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 35),
-      child: Container(
-        width: double.infinity,
-        height: 400,
-        decoration: _cardBorders(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _Detailsplan(
-              plan: plan,
-              planListProvider: planListProvider,
-            ),
-            if (trailing != null) // Agrega la condición para mostrar el widget
-              trailing!,
-          ],
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: _DetailsPlan(
+                  plan: plan,
+                  planListProvider: planListProvider,
+                ),
+              ),
+              if (trailing != null) trailing!,
+              const SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  //TODO: agregar logica de compra
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange[700],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: const Text(
+                  'Comprar',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-BoxDecoration _cardBorders() => BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: const [
-          BoxShadow(
-              color: Colors.black38, blurRadius: 10, offset: Offset(0, 5)),
-        ]);
-
-class _Detailsplan extends StatelessWidget {
-  const _Detailsplan({
+class _DetailsPlan extends StatelessWidget {
+  const _DetailsPlan({
     required this.plan,
-    required this.planListProvider, // Agrega la instancia de planListProvider
+    required this.planListProvider,
   });
 
   final PlanModel plan;
-  final PlanListProvider
-      planListProvider; // Declara la instancia de planListProvider
+  final PlanListProvider? planListProvider;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 50),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        width: double.infinity,
-        height: 70,
-        decoration: _buildBoxDecoration(),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(plan.nombre,
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis),
-                Text(plan.id.toString(),
-                    style: const TextStyle(color: Colors.black, fontSize: 15),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis),
-                Text(plan.precioMensual.toString(),
-                    style: const TextStyle(color: Colors.black, fontSize: 15),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis),
-                Text(plan.duracionMeses.toString(),
-                    style: const TextStyle(color: Colors.black, fontSize: 15),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis)
-              ],
-            ),
-          ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          plan.nombre,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
-      ),
+        const SizedBox(height: 8),
+        Text(
+          'ID: ${plan.id}',
+          style: const TextStyle(
+            color: Colors.black54,
+            fontSize: 20,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Precio mensual: \$${plan.precioMensual}',
+          style: const TextStyle(
+            color: Colors.black54,
+            fontSize: 20,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Duración: ${plan.duracionMeses} meses',
+          style: const TextStyle(
+            color: Colors.black54,
+            fontSize: 20,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
     );
   }
-
-  BoxDecoration _buildBoxDecoration() => BoxDecoration(
-      borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(25), topRight: Radius.circular(25)),
-      color: Colors.orange[700]);
 }

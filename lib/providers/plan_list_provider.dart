@@ -3,14 +3,14 @@ import 'package:productos_app/models/models.dart';
 import 'package:productos_app/providers/db_provider.dart';
 
 class PlanListProvider extends ChangeNotifier {
-  List<PlanModel> Plans = [];
+  List<PlanModel> plans = [];
   bool isLoading = true;
 
   PlanListProvider() {
     cargarPlan();
   }
 
-  newPlan(PlanModel Plan,
+  newPlan(PlanModel plan,
       {required String nombre,
       required double precioMensual,
       int? id,
@@ -25,7 +25,7 @@ class PlanListProvider extends ChangeNotifier {
     );
 
     await DBProvider.db.newPlan(newPlan);
-    Plans.add(newPlan);
+    plans.add(newPlan);
     notifyListeners();
   }
 
@@ -39,10 +39,10 @@ class PlanListProvider extends ChangeNotifier {
       notifyListeners();
       return [];
     }
-    this.Plans = [...Plans];
+    plans = [...Plans];
     isLoading = false;
     notifyListeners();
-    return this.Plans;
+    return plans;
   }
 
   /* PORSIACASO
