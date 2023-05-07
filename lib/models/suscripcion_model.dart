@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final suscripciones = suscripcionesFromJson(jsonString);
-
 import 'dart:convert';
 
 class Suscripciones {
