@@ -86,15 +86,36 @@ class HomeScreen extends StatelessWidget {
       floatingActionButton: ValueListenableBuilder<int>(
         valueListenable: currentIndex,
         builder: (context, index, _) {
-          return index == 0
-              ? FloatingActionButton(
-                  child: const Icon(Icons.add),
-                  onPressed: () async {
-                    productListProvider.newProduct(
-                        nombre: '', precio: 0.0, stock: 0);
-                  },
-                )
-              : const SizedBox.shrink();
+          return Stack(
+            children: [
+              Positioned(
+                left: 40,
+                bottom: 16,
+                child: index == 1
+                    ? FloatingActionButton(
+                        onPressed: () {
+                          //TODO: agrega un nuevo plan
+                        },
+                        child: const Icon(Icons
+                            .add_box_outlined), // Reemplaza esto con el ícono que desees
+                      )
+                    : const SizedBox.shrink(),
+              ),
+              Positioned(
+                right: 16,
+                bottom: 16,
+                child: index == 0
+                    ? FloatingActionButton(
+                        child: const Icon(Icons.add),
+                        onPressed: () async {
+                          productListProvider.newProduct(
+                              nombre: '', precio: 0.0, stock: 0);
+                        },
+                      )
+                    : const SizedBox.shrink(),
+              ),
+            ],
+          );
         },
       ),
       bottomNavigationBar: CustomNavigatorBar(currentIndex: currentIndex),
