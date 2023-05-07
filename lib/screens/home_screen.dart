@@ -11,45 +11,93 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productListProvider = Provider.of<ProductListProvider>(context);
+    final ValueNotifier<int> currentIndex = ValueNotifier<int>(0);
 
     if (productListProvider.isLoading) return const LoadingScreen();
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.admin_panel_settings_outlined),
-          onPressed: () {
-            Navigator.pushNamed(context, 'admin');
+        leading: ValueListenableBuilder<int>(
+          valueListenable: currentIndex,
+          builder: (BuildContext context, int index, Widget? child) {
+            if (index == 0) {
+              return IconButton(
+                icon: const Icon(Icons.admin_panel_settings_outlined),
+                onPressed: () {
+                  Navigator.pushNamed(context, 'admin');
+                },
+              );
+            } else {
+              return IconButton(
+                icon: const Icon(Icons.admin_panel_settings_rounded),
+                onPressed: () {
+                  Navigator.pushNamed(context, 'suscripciones');
+                },
+              );
+            }
           },
         ),
-        title: const Text('Productos'),
+        title: ValueListenableBuilder<int>(
+          valueListenable: currentIndex,
+          builder: (BuildContext context, int index, Widget? child) {
+            return Text(index == 0 ? 'Productos' : 'Planes');
+          },
+        ),
         centerTitle: true,
         actions: [
-          ButtonShoping(
-              productList: productListProvider.productsForCard,
-              productListProvider: productListProvider),
+          ValueListenableBuilder<int>(
+            valueListenable: currentIndex,
+            builder: (BuildContext context, int index, Widget? child) {
+              if (index == 0) {
+                return ButtonShoping(
+                    productList: productListProvider.productsForCard,
+                    productListProvider: productListProvider);
+              } else {
+                return const SizedBox.shrink();
+              }
+            },
+          ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: productListProvider.products.length,
-        itemBuilder: (context, i) => GestureDetector(
-          child: ProductCard(
-              product: productListProvider.products[i],
-              productListProvider: productListProvider // Pasa la instancia aquí
+      body: ValueListenableBuilder<int>(
+        valueListenable: currentIndex,
+        builder: (context, index, _) {
+          return IndexedStack(
+            index: index,
+            children: [
+              ListView.builder(
+                itemCount: productListProvider.products.length,
+                itemBuilder: (context, i) => GestureDetector(
+                  child: ProductCard(
+                      product: productListProvider.products[i],
+                      productListProvider: productListProvider),
+                  onTap: () {
+                    productListProvider.selectedProduct =
+                        productListProvider.products[i].copy();
+                    Navigator.pushNamed(context, 'producto');
+                  },
+                ),
               ),
-          onTap: () {
-            productListProvider.selectedProduct =
-                productListProvider.products[i].copy();
-            Navigator.pushNamed(context, 'producto');
-          },
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () async {
-          productListProvider.newProduct(nombre: '', precio: 0.0, stock: 0);
+              const PlanScreen(),
+            ],
+          );
         },
       ),
+      floatingActionButton: ValueListenableBuilder<int>(
+        valueListenable: currentIndex,
+        builder: (context, index, _) {
+          return index == 0
+              ? FloatingActionButton(
+                  child: const Icon(Icons.add),
+                  onPressed: () async {
+                    productListProvider.newProduct(
+                        nombre: '', precio: 0.0, stock: 0);
+                  },
+                )
+              : const SizedBox.shrink();
+        },
+      ),
+      bottomNavigationBar: CustomNavigatorBar(currentIndex: currentIndex),
     );
   }
 }

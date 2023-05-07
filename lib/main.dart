@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:productos_app/screens/screens.dart';
-import 'package:productos_app/screens/shopping_screen.dart';
 import 'package:productos_app/services/services.dart';
 import 'package:provider/provider.dart';
 import 'providers/provider.dart';
@@ -32,7 +30,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Productos App',
       debugShowCheckedModeBanner: false,
-      initialRoute: 'login',
+      initialRoute: 'home',
       routes: {
         'login': (_) => const LoginScreen(),
         'home': (_) => const HomeScreen(),
@@ -40,6 +38,7 @@ class MyApp extends StatelessWidget {
         'register': (_) => const RegisterScreen(),
         'carrito': (_) => const ShoppingScreen(),
         'admin': (_) => const UserListPage(),
+        'suscripciones': (_) => const SubscriptionsScreen(),
       },
       theme: ThemeData.light().copyWith(
           scaffoldBackgroundColor: Colors.grey[400],

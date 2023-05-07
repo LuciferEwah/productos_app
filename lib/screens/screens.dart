@@ -5,3 +5,5 @@ export 'package:productos_app/screens/loading_screen.dart';
 export 'package:productos_app/screens/register_screen.dart';
 export 'package:productos_app/screens/admin_screen.dart';
 export 'package:productos_app/screens/plan_screen.dart';
+export 'package:productos_app/screens/subscriptions_screen.dart';
+export 'package:productos_app/screens/shopping_screen.dart';
