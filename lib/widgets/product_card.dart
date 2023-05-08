@@ -160,7 +160,7 @@ class _DetailsProduct extends StatelessWidget {
               ],
             ),
             ElevatedButton(
-              onPressed: product.stock > 0
+              onPressed: product.stock > 0//AAAAA
                   ? () {
                       bool productAdded =
                           productListProvider.addToCart(product);

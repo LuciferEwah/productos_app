@@ -5,7 +5,7 @@ class PlanModel {
   String nombre;
   double precioMensual;
   int duracionMeses;
-  bool renovacionAutomatica;
+  int renovacionAutomatica;
 
   PlanModel({
     this.id,
@@ -35,4 +35,13 @@ class PlanModel {
         "duracion_meses": duracionMeses,
         "renovacion_automatica": renovacionAutomatica,
       };
+  PlanModel copy() => PlanModel(  //COPIA PRODUCTO
+      nombre: nombre,
+      precioMensual: precioMensual,
+      duracionMeses: duracionMeses,
+      id: id,
+      renovacionAutomatica: renovacionAutomatica);
 }
+
+
+

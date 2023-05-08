@@ -3,6 +3,7 @@ import 'package:productos_app/screens/screens.dart';
 import 'package:productos_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 import '../models/models.dart';
+import '../providers/plan_list_provider.dart';
 import '../providers/product_list_provider.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -12,7 +13,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final productListProvider = Provider.of<ProductListProvider>(context);
     final ValueNotifier<int> currentIndex = ValueNotifier<int>(0);
-
+    final planListProvider = Provider.of<PlanListProvider>(context);
+    final plans = planListProvider.plans;
     if (productListProvider.isLoading) return const LoadingScreen();
 
     return Scaffold(
@@ -75,6 +77,7 @@ class HomeScreen extends StatelessWidget {
                     productListProvider.selectedProduct =
                         productListProvider.products[i].copy();
                     Navigator.pushNamed(context, 'producto');
+                    
                   },
                 ),
               ),
@@ -93,12 +96,20 @@ class HomeScreen extends StatelessWidget {
                 bottom: 16,
                 child: index == 1
                     ? FloatingActionButton(
-                        onPressed: () {
-                          //TODO: agrega un nuevo plan
+                        onPressed: () async {
+                          
+                          await planListProvider.newPlan(
+                            nombre: '',
+                            precioMensual: 0,
+                            duracionMeses: 0,
+                            renovacionAutomatica: 0,
+                          );
+
+                          
                         },
                         child: const Icon(Icons
-                            .add_box_outlined), // Reemplaza esto con el ícono que desees
-                      )
+                            .add_box_outlined), 
+                      )//TODO: QUE EL BOTON NO TIRE PARA ATRAS
                     : const SizedBox.shrink(),
               ),
               Positioned(

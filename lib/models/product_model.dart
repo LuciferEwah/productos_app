@@ -44,7 +44,7 @@ class ProductModel {
         "imagen": imagen,
       };
 
-  ProductModel copy() => ProductModel(
+  ProductModel copy() => ProductModel(  //COPIA PRODUCTO
       nombre: nombre,
       precio: precio,
       stock: stock,

@@ -5,22 +5,28 @@ import 'package:productos_app/providers/db_provider.dart';
 class PlanListProvider extends ChangeNotifier {
   List<PlanModel> plans = [];
   bool isLoading = true;
+  late PlanModel selectedPlan;
 
   PlanListProvider() {
     cargarPlan();
+    selectedPlan = PlanModel(
+        nombre: '',
+        precioMensual: 0,
+        duracionMeses: 0,
+        renovacionAutomatica: 0);
   }
 
-  newPlan(PlanModel plan,
+  newPlan(
       {required String nombre,
       required double precioMensual,
       int? id,
       required int duracionMeses,
-      required bool renovacionAutimatica}) async {
+      required int renovacionAutomatica}) async {
     final newPlan = PlanModel(
       nombre: nombre,
       precioMensual: precioMensual,
       duracionMeses: duracionMeses,
-      renovacionAutomatica: renovacionAutimatica,
+      renovacionAutomatica: renovacionAutomatica,
       id: id,
     );
 
@@ -66,4 +72,36 @@ class PlanListProvider extends ChangeNotifier {
     await DBProvider.db.updatePlan(Plan);
     cargarPlan();
   }
+
+ /*  Future<void> realizarVenta(double subtotal, double iva, double total, 
+      int? usuarioId, Map<int, int> cantidadSeleccionada) async {
+    // Crear una instancia de VentaModel
+    VentaModel venta = VentaModel(
+      fecha: DateTime.now().toString(),
+      total: total,
+      usuarioId: usuarioId, // Aquí puedes proporcionar el ID de usuario actual
+    );
+
+    // Llamar a la función addVenta() para agregar la venta a la base de datos
+    int ventaId = await DBProvider.db.addVenta(venta);}
+
+ Agregar detalles de la venta
+    for (int index = 0; index < productsForCard.length; index++) {
+      ProductModel product = productsForCard[index];
+
+      // Utiliza el ID del producto en lugar del índice para acceder a la cantidad
+      int cantidadProducto = cantidadSeleccionada[product.id!] ?? 1;
+
+      DetalleVentaModel detalleVenta = DetalleVentaModel(
+        ventaId: ventaId,
+        productoId: product.id!,
+        cantidad: cantidadProducto, // Usa la cantidad seleccionada aquí
+        subtotal:
+            product.precio * cantidadProducto, // Modifica el subtotal aquí
+      );
+      await DBProvider.db.addDetalleVenta(detalleVenta);
+
+
+      cargarProduct();*/
+    
 }

@@ -22,7 +22,7 @@ class DBProvider {
 
   Future<Database> initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    final path = join(documentsDirectory.path, 'ProductosDB.db');
+    final path = join(documentsDirectory.path, 'ProductosDB2.db');
 
     return await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
@@ -44,6 +44,9 @@ class DBProvider {
       // Crea la tabla 'detalle_venta'
       await db.execute(
           'CREATE TABLE DETALLE_VENTA (id INTEGER PRIMARY KEY, venta_id INTEGER, producto_id INTEGER, cantidad INTEGER, subtotal REAL, FOREIGN KEY(venta_id) REFERENCES VENTA(id), FOREIGN KEY(producto_id) REFERENCES PRODUCTO(id))');
+// Crea la tabla 'compra_suscripcion'
+      await db.execute(
+          'CREATE TABLE COMPRA_SUSCRIPCION (id INTEGER PRIMARY KEY, usuario_id INTEGER, suscripcion_id INTEGER, fecha_compra DATE, total REAL, FOREIGN KEY(usuario_id) REFERENCES USUARIO(id), FOREIGN KEY(suscripcion_id) REFERENCES SUSCRIPCIONES(id))');    
     });
   }
 
