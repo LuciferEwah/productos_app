@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
           ),
-          PlanScreen(),
+          const PlanScreen(),
         ],
       ),
       floatingActionButton: currentIndex == 0
