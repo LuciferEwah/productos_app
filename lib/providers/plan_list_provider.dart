@@ -3,9 +3,11 @@ import 'package:productos_app/models/models.dart';
 import 'package:productos_app/providers/db_provider.dart';
 
 class PlanListProvider extends ChangeNotifier {
-  List<PlanModel> plans = [];
   bool isLoading = true;
   late PlanModel selectedPlan;
+  List<PlanModel> _plans = [];
+
+  List<PlanModel> get plans => _plans;
 
   PlanListProvider() {
     cargarPlan();
@@ -16,23 +18,28 @@ class PlanListProvider extends ChangeNotifier {
         renovacionAutomatica: 0);
   }
 
-  newPlan(
-      {required String nombre,
-      required double precioMensual,
-      int? id,
-      required int duracionMeses,
-      required int renovacionAutomatica}) async {
+  Future<PlanModel> newPlan({
+    required String nombre,
+    required double precioMensual,
+    required int duracionMeses,
+    required int renovacionAutomatica,
+  }) async {
     final newPlan = PlanModel(
       nombre: nombre,
       precioMensual: precioMensual,
       duracionMeses: duracionMeses,
       renovacionAutomatica: renovacionAutomatica,
-      id: id,
     );
 
-    await DBProvider.db.newPlan(newPlan);
-    plans.add(newPlan);
+    // Guarda el nuevo plan en la base de datos y obtiene el PlanModel con ID asignado
+    final planWithId = await DBProvider.db.newPlan(newPlan);
+
+    // Asigna el ID generado por la base de datos al nuevo plan
+    newPlan.id = planWithId.id;
+
+    _plans.add(newPlan);
     notifyListeners();
+    return newPlan;
   }
 
   Future<List<PlanModel>> cargarPlan() async {
@@ -45,7 +52,7 @@ class PlanListProvider extends ChangeNotifier {
       notifyListeners();
       return [];
     }
-    plans = [...Plans];
+    _plans = [...Plans];
     isLoading = false;
     notifyListeners();
     return plans;
@@ -73,7 +80,7 @@ class PlanListProvider extends ChangeNotifier {
     cargarPlan();
   }
 
- /*  Future<void> realizarVenta(double subtotal, double iva, double total, 
+  /*  Future<void> realizarVenta(double subtotal, double iva, double total, 
       int? usuarioId, Map<int, int> cantidadSeleccionada) async {
     // Crear una instancia de VentaModel
     VentaModel venta = VentaModel(
@@ -103,5 +110,4 @@ class PlanListProvider extends ChangeNotifier {
 
 
       cargarProduct();*/
-    
 }

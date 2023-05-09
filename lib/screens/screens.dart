@@ -7,3 +7,4 @@ export 'package:productos_app/screens/admin_screen.dart';
 export 'package:productos_app/screens/plan_screen.dart';
 export 'package:productos_app/screens/subscriptions_screen.dart';
 export 'package:productos_app/screens/shopping_screen.dart';
+export 'package:productos_app/screens/admin_sub.dart';

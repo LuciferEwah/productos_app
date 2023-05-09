@@ -1,31 +1,36 @@
 import 'package:flutter/material.dart';
 
 class CustomNavigatorBar extends StatelessWidget {
-  final ValueNotifier<int> currentIndex;
+  final int currentIndex;
+  final PageController pageController;
 
-  const CustomNavigatorBar({Key? key, required this.currentIndex})
-      : super(key: key);
+  const CustomNavigatorBar({
+    Key? key,
+    required this.currentIndex,
+    required this.pageController,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<int>(
-      valueListenable: currentIndex,
-      builder: (context, index, _) {
-        return BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-                icon: Icon(Icons.production_quantity_limits),
-                label: 'Productos'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.star_border_sharp), label: 'Planes')
-          ],
-          elevation: 0,
-          currentIndex: index,
-          onTap: (newIndex) {
-            currentIndex.value = newIndex;
-          },
+    return BottomNavigationBar(
+      currentIndex: currentIndex,
+      onTap: (index) {
+        pageController.animateToPage(
+          index,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
         );
       },
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.list),
+          label: 'Productos',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.sticky_note_2),
+          label: 'Planes',
+        )
+      ],
     );
   }
 }

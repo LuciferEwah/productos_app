@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
         'admin': (_) => const UserListPage(),
         'suscripciones': (_) => const SubscriptionsScreen(),
         'plan': (_) => const PlanScreen(),
+        'admin_sub': (_) => const AdminSubScreen(),
       },
       theme: ThemeData.light().copyWith(
           scaffoldBackgroundColor: Colors.grey[400],
