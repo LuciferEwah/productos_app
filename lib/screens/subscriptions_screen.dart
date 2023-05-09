@@ -91,7 +91,7 @@ class _PlanForm extends StatelessWidget {
     final planFrom = Provider.of<PlanFromProvider>(context);
     final plan = planFrom.plan;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),//TODO: BAJAR EL FORMULARIO PORQUE ESTA MUY ARRIBA 
+      padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         width: double.infinity,
