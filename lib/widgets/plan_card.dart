@@ -39,9 +39,6 @@ class PlanCard extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   print('AAAAAAA'); //TODO: agregar logica de compra
-
-
-                  
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange[700],

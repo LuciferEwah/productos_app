@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:productos_app/providers/provider.dart';
@@ -59,7 +58,6 @@ class _PlanScreenBody extends StatelessWidget {
                   planListProvider
                       .deleteById(planListProvider.selectedPlan.id!);
                   Navigator.of(context).pop();
-                  //Navigator.pushReplacementNamed(context, 'plan');
                 }
               },
               heroTag: null,
@@ -90,8 +88,14 @@ class _PlanForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final planFrom = Provider.of<PlanFromProvider>(context);
     final plan = planFrom.plan;
+    final screenHeight =
+        MediaQuery.of(context).size.height; // Obtén la altura de la pantalla
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),//TODO: BAJAR EL FORMULARIO PORQUE ESTA MUY ARRIBA 
+      padding: EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: screenHeight *
+            0.15, // 10% de padding desde la parte superior e inferior
+      ),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         width: double.infinity,
@@ -156,8 +160,7 @@ class _PlanForm extends StatelessWidget {
 
   BoxDecoration _buildBoxDecoration() => BoxDecoration(
         color: Colors.white,
-        borderRadius: const BorderRadius.only(
-            bottomRight: Radius.circular(25), bottomLeft: Radius.circular(25)),
+        borderRadius: const BorderRadius.all(Radius.circular(25)),
         boxShadow: [
           BoxShadow(
               color: Colors.black.withOpacity(0.05),
