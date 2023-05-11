@@ -215,4 +215,23 @@ class DBProvider {
         ? res.map((e) => Suscripciones.fromJson(e)).toList()
         : [];
   }
+
+  Future<CompraSuscripcion> newCompraSuscripcion(
+      CompraSuscripcion newCompraSuscripcion) async {
+    final db = await database;
+    final res =
+        await db?.insert('COMPRA_SUSCRIPCION', newCompraSuscripcion.toJson());
+
+    // Asigna el ID generado automáticamente a la compra de suscripción y lo devuelve.
+    newCompraSuscripcion.id = res;
+    return newCompraSuscripcion;
+  }
+
+  Future<List<CompraSuscripcion>> getCompraSuscripcionesAll() async {
+    final db = await database;
+    final res = await db!.query('COMPRA_SUSCRIPCION');
+    return res.isNotEmpty
+        ? res.map((e) => CompraSuscripcion.fromJson(e)).toList()
+        : [];
+  }
 }

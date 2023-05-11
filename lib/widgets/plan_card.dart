@@ -18,7 +18,11 @@ class PlanCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userListProvider = Provider.of<UserListProvider>(context);
-    final suscriptionListProvider =       Provider.of<SuscriptionListProvider>(context);
+    final suscriptionListProvider =
+        Provider.of<SuscriptionListProvider>(context);
+    final suscriptionCompraListProvider =
+        Provider.of<SuscriptionCompraListProvider>(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Card(
@@ -50,16 +54,31 @@ class PlanCard extends StatelessWidget {
                     fechaFin: fechaInicio
                         .add(Duration(days: plan.duracionMeses * 30)),
                     estado: 'Activo',
-                    idUsuario: 150,//TODO: clave valor esa wea //userListProvider.idUser
+                    idUsuario:
+                        150, //TODO: clave valor esa wea // idUsuario=userListProvider.idUser
                     idPlan: plan.id!,
                   );
+                  await suscriptionListProvider.addSubscription(suscripcion);
+
+// Create a new CompraSuscripcion
+                  var compraSuscripcion = CompraSuscripcion(
+                    usuarioId:
+                        150, //TODO: clave valor esa wea // idUsuario=userListProvider.idUser
+                    suscripcionId: suscripcion
+                        .id!, // assuming suscripcion.id is set after addSubscription
+                    fechaCompra: DateTime.now(),
+                    total: plan.precioMensual,
+                  );
+
+// Guarda la suscripción en la base de datos
+                  await suscriptionCompraListProvider
+                      .newCompraSuscripcion(compraSuscripcion);
 
                   // Guarda la suscripción en la base de datos
-                  await suscriptionListProvider.addSubscription(suscripcion);
 
                   // Actualiza la UI
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text('Plan comprado exitosamente!'),
                     ),
                   );
