@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
-//TODO: MOSTRAR LOS USUARIOS CON SUSCRIPCIONES 
+/*TODO: MOSTRAR LOS USUARIOS CON SUSCRIPCIONES 
+
+
+int? usuarioId = userListProvider.idUser;
+*/
 
 class AdminSubScreen extends StatelessWidget {
   const AdminSubScreen({Key? key}) : super(key: key);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:productos_app/models/models.dart';
-import 'package:productos_app/providers/plan_list_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:productos_app/providers/provider.dart';
 
 class PlanCard extends StatelessWidget {
   const PlanCard({
@@ -16,6 +17,8 @@ class PlanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userListProvider = Provider.of<UserListProvider>(context);
+    final suscriptionListProvider =       Provider.of<SuscriptionListProvider>(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Card(
@@ -37,8 +40,29 @@ class PlanCard extends StatelessWidget {
               if (trailing != null) trailing!,
               const SizedBox(width: 10),
               ElevatedButton(
-                onPressed: () {
-                  print('AAAAAAA'); //TODO: agregar logica de compra
+                onPressed: () async {
+                  print('BOTON COMPRAR EN PLANES');
+
+                  // Crea una nueva suscripción
+                  var fechaInicio = DateTime.now();
+                  var suscripcion = Suscripciones(
+                    fechaInicio: fechaInicio,
+                    fechaFin: fechaInicio
+                        .add(Duration(days: plan.duracionMeses * 30)),
+                    estado: 'Activo',
+                    idUsuario: 150,//TODO: clave valor esa wea //userListProvider.idUser
+                    idPlan: plan.id!,
+                  );
+
+                  // Guarda la suscripción en la base de datos
+                  await suscriptionListProvider.addSubscription(suscripcion);
+
+                  // Actualiza la UI
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Plan comprado exitosamente!'),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange[700],

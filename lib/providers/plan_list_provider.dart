@@ -6,6 +6,7 @@ class PlanListProvider extends ChangeNotifier {
   bool isLoading = true;
   late PlanModel selectedPlan;
   List<PlanModel> _plans = [];
+  int? idPlan;
 
   List<PlanModel> get plans => _plans;
 

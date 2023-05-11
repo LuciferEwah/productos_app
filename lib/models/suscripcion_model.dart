@@ -1,19 +1,19 @@
 import 'dart:convert';
 
 class Suscripciones {
-  int id;
-  DateTime fechaInicio;
+  int? id;
+  DateTime fechaInicio;//
   DateTime fechaFin;
-  String estado;
-  int idUsuario;
+  String estado; 
+  int? idUsuario;
   int idPlan;
 
   Suscripciones({
-    required this.id,
+    this.id,
     required this.fechaInicio,
     required this.fechaFin,
     required this.estado,
-    required this.idUsuario,
+    this.idUsuario,
     required this.idPlan,
   });
 

@@ -4,75 +4,32 @@ import 'package:productos_app/providers/db_provider.dart';
 
 
 
-/* TODO: LISTA DE SUSCRIPTORES
 class SuscriptionListProvider extends ChangeNotifier {
-  List<UserModel> users = [];
+  List<Suscripciones> suscripciones = [];
   bool isLoading = true;
-  late UserModel selectedUser;
-  int? idUser;
 
-  UserListProvider() {
-    cargarUser();
-    selectedUser = UserModel(email: '', contrasena: '');
+  SuscriptionListProvider() {
+    cargarSuscripcion();
   }
 
-  newUser(UserModel user,
-      {required String email, required String contrasena, int? id}) async {
-    final newUser = UserModel(
-      email: email,
-      contrasena: contrasena,
-      id: id,
-    );
-
-    await DBProvider.db.newUser(newUser);
-    users.add(newUser);
+  Future<void> addSubscription(Suscripciones suscripcion) async {
+    await DBProvider.db.newSuscripcion(suscripcion);
+    suscripciones.add(suscripcion);
     notifyListeners();
   }
 
-  Future<List<UserModel>> cargarUser() async {
+  Future<List<Suscripciones>> cargarSuscripcion() async {
     isLoading = true;
     notifyListeners();
-    final users = await DBProvider.db.getUserAll();
-    // ignore: unnecessary_null_comparison
-    if (users == null) {
+    final suscripciones = await DBProvider.db.getSuscripcionesAll();
+    if (suscripciones == null) {
       isLoading = false;
       notifyListeners();
       return [];
     }
-    this.users = [...users];
+    this.suscripciones = [...suscripciones];
     isLoading = false;
     notifyListeners();
-    return this.users;
-  }
-
-  Future<bool> checkUserExists(
-      {required String email, required String contrasena}) async {
-    final users = await DBProvider.db.getUserEmail(email);
-    return users != null &&
-        users.any(
-            (user) => user.email == email && user.contrasena == contrasena);
-  }
-
-  Future<int?> getIdByEmail(String email) async {
-    final db = await DBProvider.db.database;
-    final res =
-        await db!.query('USUARIO', where: 'email = ?', whereArgs: [email]);
-    int? userId = res.isNotEmpty ? res.first['id'] as int? : null;
-
-    return userId;
-  }
-
-  deleteById(int? id) async {
-    if (id != null) {
-      await DBProvider.db.deleteUserById(id);
-      cargarUser();
-    }
-  }
-
-
-  update(user) async {
-    await DBProvider.db.updateUser(user);
-    cargarUser();
+    return this.suscripciones;
   }
 }
-*/

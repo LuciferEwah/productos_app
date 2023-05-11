@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 : Icons.admin_panel_settings_rounded,
           ),
           onPressed: () {
-            print('boton');
+            print('BOTON PARA IR A REVISAR PANTALLA&LISTA DE USUARIOS CON SUSCRIPCION');
             Navigator.pushNamed(
                 context, currentIndex == 0 ? 'admin' : 'admin_sub');
           },

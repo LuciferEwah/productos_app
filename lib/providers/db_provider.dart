@@ -46,7 +46,7 @@ class DBProvider {
           'CREATE TABLE DETALLE_VENTA (id INTEGER PRIMARY KEY, venta_id INTEGER, producto_id INTEGER, cantidad INTEGER, subtotal REAL, FOREIGN KEY(venta_id) REFERENCES VENTA(id), FOREIGN KEY(producto_id) REFERENCES PRODUCTO(id))');
 // Crea la tabla 'compra_suscripcion'
       await db.execute(
-          'CREATE TABLE COMPRA_SUSCRIPCION (id INTEGER PRIMARY KEY, usuario_id INTEGER, suscripcion_id INTEGER, fecha_compra DATE, total REAL, FOREIGN KEY(usuario_id) REFERENCES USUARIO(id), FOREIGN KEY(suscripcion_id) REFERENCES SUSCRIPCIONES(id))');    
+          'CREATE TABLE COMPRA_SUSCRIPCION (id INTEGER PRIMARY KEY, usuario_id INTEGER, suscripcion_id INTEGER, fecha_compra DATE, total REAL, FOREIGN KEY(usuario_id) REFERENCES USUARIO(id), FOREIGN KEY(suscripcion_id) REFERENCES SUSCRIPCIONES(id))');
     });
   }
 
@@ -196,5 +196,23 @@ class DBProvider {
     final res = await db!.update('PLANES_DE_SUSCRIPCION', updatePlan.toJson(),
         where: 'id = ?', whereArgs: [updatePlan.id]);
     return res;
+  }
+
+//////////////////////////////////////////////// suscripciones ////////////////////////////////////////////////
+  Future<Suscripciones> newSuscripcion(Suscripciones newSuscripcion) async {
+    final db = await database;
+    final res = await db?.insert('SUSCRIPCIONES', newSuscripcion.toJson());
+
+    // Asigna el ID generado automáticamente a la suscripción y lo devuelve.
+    newSuscripcion.id = res;
+    return newSuscripcion;
+  }
+
+  Future<List<Suscripciones>> getSuscripcionesAll() async {
+    final db = await database;
+    final res = await db!.query('SUSCRIPCIONES');
+    return res.isNotEmpty
+        ? res.map((e) => Suscripciones.fromJson(e)).toList()
+        : [];
   }
 }
