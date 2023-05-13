@@ -3,6 +3,7 @@ import 'package:productos_app/models/models.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/product_list_provider.dart';
+import '../providers/subscription_list_provider.dart';
 import '../providers/user_list_provider.dart';
 
 class ShoppingScreen extends StatefulWidget {
@@ -16,7 +17,6 @@ class ShoppingScreen extends StatefulWidget {
 class _ShoppingScreenState extends State<ShoppingScreen> {
   Map<int, int> cantidad = {};
   List<ProductModel> products = [];
-  bool checkSuscripcion = true; //TODO checkear de verdad
 
   @override
   void initState() {
@@ -42,7 +42,13 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
   double get totalSinDct => subtotal + iva;
 
   double get descuento {
-    if (checkSuscripcion) {
+    final suscriptionProvider =
+        Provider.of<SuscriptionListProvider>(context, listen: false);
+    final userListProvider =
+        Provider.of<UserListProvider>(context, listen: false);
+    final userId = userListProvider.idUser;
+    var suscripcion = suscriptionProvider.getActiveSubscription(userId!);
+    if (suscripcion != null) {
       return totalSinDct * 0.1;
     }
     return 0;
@@ -62,6 +68,8 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
   Widget build(BuildContext context) {
     final productListProvider = Provider.of<ProductListProvider>(context);
     final userListProvider = Provider.of<UserListProvider>(context);
+    final suscriptionListProvider =
+        Provider.of<SuscriptionListProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -156,13 +164,27 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                     ],
                   ),
                   const SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Suscripcion(-10%):', style: TextStyle(fontSize: 18)),
-                      Text('\$${descuento.toStringAsFixed(2)}',
-                          style: const TextStyle(fontSize: 18)),
-                    ],
+                  FutureBuilder<Suscripciones?>(
+                    future: suscriptionListProvider
+                        .getActiveSubscription(userListProvider.idUser!),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<Suscripciones?> snapshot) {
+                      double descuento = 0;
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.hasData) {
+                          descuento = totalSinDct * 0.1;
+                        }
+                      }
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Suscripcion(-10%):',
+                              style: TextStyle(fontSize: 18)),
+                          Text('\$${descuento.toStringAsFixed(2)}',
+                              style: const TextStyle(fontSize: 18)),
+                        ],
+                      );
+                    },
                   ),
                   const SizedBox(height: 15),
                   Row(

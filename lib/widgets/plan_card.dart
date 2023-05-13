@@ -18,12 +18,12 @@ class PlanCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userListProvider = Provider.of<UserListProvider>(context);
+
     final suscriptionListProvider =
         Provider.of<SuscriptionListProvider>(context);
     final suscriptionCompraListProvider =
         Provider.of<SuscriptionCompraListProvider>(context);
 
-    bool checkSuscripcion = false;// TODO CHECKEAR DE VERDAD
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Card(
@@ -44,60 +44,81 @@ class PlanCard extends StatelessWidget {
               ),
               if (trailing != null) trailing!,
               const SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: checkSuscripcion
-                    // ignore: dead_code
-                    ? () async {
-                        print('BOTON COMPRAR EN PLANES');
+              FutureBuilder<Suscripciones?>(
+                future: suscriptionListProvider
+                    .getActiveSubscription(userListProvider.idUser!),
+                builder: (BuildContext context,
+                    AsyncSnapshot<Suscripciones?> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else {
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      if (snapshot.data == null) {
+                        return ElevatedButton(
+                          onPressed: () async {//parte el boton
+                            print('BOTON COMPRAR EN PLANES');
 
-                        // Crea una nueva suscripción
-                        var fechaInicio = DateTime.now();
-                        var suscripcion = Suscripciones(
-                          fechaInicio: fechaInicio,
-                          fechaFin:
-                              fechaInicio.add(Duration(days: plan.duracionMeses * 30)),
-                          estado: 'Activo',
-                          idUsuario:
-                              150, //TODO: clave valor esa wea // idUsuario=userListProvider.idUser
-                          idPlan: plan.id!,
+                            // Crea una nueva suscripción
+                            var fechaInicio = DateTime.now();
+                            var suscripcion = Suscripciones(
+                              fechaInicio: fechaInicio,
+                              fechaFin: fechaInicio
+                                  .add(Duration(days: plan.duracionMeses * 30)),
+                              estado: 'Activo',
+                              idUsuario: userListProvider
+                                  .idUser, //TODO: clave valor esa wea // idUsuario=userListProvider.idUser
+                              idPlan: plan.id!,
+                            );
+                            await suscriptionListProvider
+                                .addSubscription(suscripcion);
+
+                            // Create a new CompraSuscripcion
+                            var compraSuscripcion = CompraSuscripcion(
+                              usuarioId: userListProvider
+                                  .idUser!, //TODO: clave valor esa wea // idUsuario=userListProvider.idUser
+                              suscripcionId: suscripcion
+                                  .id!, // assuming suscripcion.id is set after addSubscription
+                              fechaCompra:
+                                  fechaInicio, // sale en string el datetime por alguna razon(causa: base dinamica xdd)
+                              total: plan.precioMensual,
+                            );
+
+                            // Guarda la suscripción en la base de datos
+                            await suscriptionCompraListProvider
+                                .newCompraSuscripcion(compraSuscripcion);
+                            // Aquí va tu código para comprar el plan
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange[700],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: Text(
+                            'Comprar',
+                            style: TextStyle(color: Colors.black),
+                          ),
                         );
-                        await suscriptionListProvider.addSubscription(suscripcion);
-
-                        // Create a new CompraSuscripcion
-                        var compraSuscripcion = CompraSuscripcion(
-                          usuarioId:
-                              150, //TODO: clave valor esa wea // idUsuario=userListProvider.idUser
-                          suscripcionId: suscripcion
-                              .id!, // assuming suscripcion.id is set after addSubscription
-                          fechaCompra: fechaInicio,// sale en string el datetime por alguna razon(causa: base dinamica xdd)
-                          total: plan.precioMensual,
-                        );
-
-                        // Guarda la suscripción en la base de datos
-                        await suscriptionCompraListProvider
-                            .newCompraSuscripcion(compraSuscripcion);
-
-                        // Actualiza la UI
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Plan comprado exitosamente!'),
+                      } else {
+                        return ElevatedButton(
+                          onPressed: null,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey[500],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: Text(
+                            'Suscripcion Activa',
+                            style: TextStyle(color: Colors.black),
                           ),
                         );
                       }
-                    : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: checkSuscripcion ? Colors.orange[700] : Colors.grey[500],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Text(
-                  // ignore: dead_code
-                  checkSuscripcion ? 'Comprar' : 'Suscripcion Activa',
-                  style: TextStyle(
-                    color: checkSuscripcion ? Colors.black : Colors.black,
-                  ),
-                ),
+                    }
+                  }
+                },
               )
             ],
           ),

@@ -42,5 +42,13 @@ void startUpdatingSubscriptionStatus() {
       await DBProvider.db.updateSubscriptionStatus();
     });
   }
+  Future<Suscripciones?> getActiveSubscription(int userId) async {
+    final suscripciones = await DBProvider.db.getActiveSubscription(userId);
+    if (suscripciones != null && suscripciones.isNotEmpty) {
+      return suscripciones.first;
+    } else {
+      return null;
+    }
+  }
 
 }

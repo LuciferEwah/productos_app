@@ -237,18 +237,18 @@ class DBProvider {
         : [];
   }
 
- Future<Suscripciones?> getActiveSubscription(int userId) async {
-    //codigo nueo
+  Future<List<Suscripciones>> getActiveSubscription(int userId) async {
     final db = await database;
-    final result = await db!.query(
+    final res = await db!.query(
       'SUSCRIPCIONES',
       where: 'id_usuario = ? AND estado = ?',
       whereArgs: [userId, "Activo"],
     );
-    if (result.isNotEmpty) {
-      return Suscripciones.fromJson(result.first);
+
+    if (res.isNotEmpty) {
+      return res.map((s) => Suscripciones.fromJson(s)).toList();
     } else {
-      return null;
+      return [];
     }
   }
 
