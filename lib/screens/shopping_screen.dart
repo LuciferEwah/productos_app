@@ -17,6 +17,7 @@ class ShoppingScreen extends StatefulWidget {
 class _ShoppingScreenState extends State<ShoppingScreen> {
   Map<int, int> cantidad = {};
   List<ProductModel> products = [];
+  String? suscripcionEstado;
 
   @override
   void initState() {
@@ -26,6 +27,7 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
     for (var product in products) {
       cantidad[product.id!] = 1;
     }
+    setupSubscriptionStatus();
   }
 
   double get subtotal {
@@ -41,14 +43,26 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
 
   double get totalSinDct => subtotal + iva;
 
-  double get descuento {
+  // nuevo método para obtener el estado de la suscripción
+  void setupSubscriptionStatus() async {
     final suscriptionProvider =
         Provider.of<SuscriptionListProvider>(context, listen: false);
     final userListProvider =
         Provider.of<UserListProvider>(context, listen: false);
     final userId = userListProvider.idUser;
-    var suscripcion = suscriptionProvider.getActiveSubscription(userId!);
-    if (suscripcion != null) {
+    var suscripcion = await suscriptionProvider.getActiveSubscription(userId!);
+    if (mounted) {
+      // verifica si el widget aún está montado
+      setState(() {
+        suscripcionEstado = suscripcion
+            ?.estado; // almacena el estado en la variable de instancia
+      });
+    }
+  }
+
+  double get descuento {
+    // ahora, refiérete al estado almacenado en lugar de obtenerlo en el getter
+    if (suscripcionEstado == 'Activo') {
       return totalSinDct * 0.1;
     }
     return 0;

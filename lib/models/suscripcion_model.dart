@@ -12,7 +12,7 @@ class Suscripciones {
     this.id,
     required this.fechaInicio,
     required this.fechaFin,
-    required this.estado,
+    this.estado = 'Inactivo',
     this.idUsuario,
     required this.idPlan,
   });
