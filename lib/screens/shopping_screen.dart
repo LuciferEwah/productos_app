@@ -16,6 +16,7 @@ class ShoppingScreen extends StatefulWidget {
 class _ShoppingScreenState extends State<ShoppingScreen> {
   Map<int, int> cantidad = {};
   List<ProductModel> products = [];
+  bool checkSuscripcion = true; //TODO checkear de verdad
 
   @override
   void initState() {
@@ -38,7 +39,16 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
 
   double get iva => subtotal * 0.19;
 
-  double get total => subtotal + iva;
+  double get totalSinDct => subtotal + iva;
+
+  double get descuento {
+    if (checkSuscripcion) {
+      return totalSinDct * 0.1;
+    }
+    return 0;
+  }
+
+  double get total => subtotal + iva - descuento;
 
   void removeProduct(ProductModel product) {
     setState(() {
@@ -142,6 +152,15 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                     children: [
                       const Text('IVA (19%):', style: TextStyle(fontSize: 18)),
                       Text('\$${iva.toStringAsFixed(2)}',
+                          style: const TextStyle(fontSize: 18)),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Suscripcion(-10%):', style: TextStyle(fontSize: 18)),
+                      Text('\$${descuento.toStringAsFixed(2)}',
                           style: const TextStyle(fontSize: 18)),
                     ],
                   ),
