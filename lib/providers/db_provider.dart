@@ -5,6 +5,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:productos_app/models/models.dart';
 import 'package:sqflite/sqflite.dart';
 
+
+
 class DBProvider {
   static Database? _database;
   static final DBProvider db = DBProvider._();
@@ -234,4 +236,42 @@ class DBProvider {
         ? res.map((e) => CompraSuscripcion.fromJson(e)).toList()
         : [];
   }
+
+ Future<Suscripciones?> getActiveSubscription(int userId) async {
+    //codigo nueo
+    final db = await database;
+    final result = await db!.query(
+      'SUSCRIPCIONES',
+      where: 'id_usuario = ? AND estado = ?',
+      whereArgs: [userId, "Activo"],
+    );
+    if (result.isNotEmpty) {
+      return Suscripciones.fromJson(result.first);
+    } else {
+      return null;
+    }
+  }
+
+  Future<void> updateSubscriptionStatus() async {
+    final db = await database;
+    final result = await db!
+        .query('SUSCRIPCIONES', where: 'estado = ?', whereArgs: ["Activo"]);
+    result.forEach((subscription) {
+      DateTime endDate = DateTime.parse(subscription["fecha_fin"]
+          as String); // AGREGAMOS EL "AS STRING" PA SOLUCIONAR LO DEL DATETIME.PARSE()
+
+      if (DateTime.now().isAfter(endDate)) {
+        db.update(
+          'SUSCRIPCIONES',
+          {'estado': "Inactivo"},
+          where: 'id = ?',
+          whereArgs: [subscription["id"]],
+        );
+      }
+    });
+  }
+
+  
 }
+
+

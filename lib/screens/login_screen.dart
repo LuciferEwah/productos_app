@@ -3,10 +3,28 @@ import 'package:productos_app/providers/login_from_provider.dart';
 import 'package:productos_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 import '../interface/input_decorations.dart';
+import '../providers/subscription_list_provider.dart';
 import '../providers/user_list_provider.dart';
 
-class LoginScreen extends StatelessWidget {
+
+class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<SuscriptionListProvider>(context, listen: false)
+          .startUpdatingSubscriptionStatus();
+    });
+  }
+
+  // The closing bracket for initState() was removed here, as it was extra.
 
   @override
   Widget build(BuildContext context) {

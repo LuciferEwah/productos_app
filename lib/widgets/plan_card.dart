@@ -69,7 +69,7 @@ class PlanCard extends StatelessWidget {
                               150, //TODO: clave valor esa wea // idUsuario=userListProvider.idUser
                           suscripcionId: suscripcion
                               .id!, // assuming suscripcion.id is set after addSubscription
-                          fechaCompra: DateTime.now(),
+                          fechaCompra: fechaInicio,// sale en string el datetime por alguna razon(causa: base dinamica xdd)
                           total: plan.precioMensual,
                         );
 
