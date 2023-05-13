@@ -3,6 +3,7 @@ import 'package:productos_app/models/models.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/product_list_provider.dart';
+import '../providers/subscription_list_provider.dart';
 import '../providers/user_list_provider.dart';
 
 class ShoppingScreen extends StatefulWidget {
@@ -16,6 +17,7 @@ class ShoppingScreen extends StatefulWidget {
 class _ShoppingScreenState extends State<ShoppingScreen> {
   Map<int, int> cantidad = {};
   List<ProductModel> products = [];
+  String? suscripcionEstado;
 
   @override
   void initState() {
@@ -25,6 +27,7 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
     for (var product in products) {
       cantidad[product.id!] = 1;
     }
+    setupSubscriptionStatus();
   }
 
   double get subtotal {
@@ -38,7 +41,34 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
 
   double get iva => subtotal * 0.19;
 
-  double get total => subtotal + iva;
+  double get totalSinDct => subtotal + iva;
+
+  // nuevo método para obtener el estado de la suscripción
+  void setupSubscriptionStatus() async {
+    final suscriptionProvider =
+        Provider.of<SuscriptionListProvider>(context, listen: false);
+    final userListProvider =
+        Provider.of<UserListProvider>(context, listen: false);
+    final userId = userListProvider.idUser;
+    var suscripcion = await suscriptionProvider.getActiveSubscription(userId!);
+    if (mounted) {
+      // verifica si el widget aún está montado
+      setState(() {
+        suscripcionEstado = suscripcion
+            ?.estado; // almacena el estado en la variable de instancia
+      });
+    }
+  }
+
+  double get descuento {
+    // ahora, refiérete al estado almacenado en lugar de obtenerlo en el getter
+    if (suscripcionEstado == 'Activo') {
+      return totalSinDct * 0.1;
+    }
+    return 0;
+  }
+
+  double get total => subtotal + iva - descuento;
 
   void removeProduct(ProductModel product) {
     setState(() {
@@ -52,6 +82,8 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
   Widget build(BuildContext context) {
     final productListProvider = Provider.of<ProductListProvider>(context);
     final userListProvider = Provider.of<UserListProvider>(context);
+    final suscriptionListProvider =
+        Provider.of<SuscriptionListProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -144,6 +176,29 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                       Text('\$${iva.toStringAsFixed(2)}',
                           style: const TextStyle(fontSize: 18)),
                     ],
+                  ),
+                  const SizedBox(height: 15),
+                  FutureBuilder<Suscripciones?>(
+                    future: suscriptionListProvider
+                        .getActiveSubscription(userListProvider.idUser!),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<Suscripciones?> snapshot) {
+                      double descuento = 0;
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.hasData) {
+                          descuento = totalSinDct * 0.1;
+                        }
+                      }
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Suscripcion(-10%):',
+                              style: TextStyle(fontSize: 18)),
+                          Text('\$${descuento.toStringAsFixed(2)}',
+                              style: const TextStyle(fontSize: 18)),
+                        ],
+                      );
+                    },
                   ),
                   const SizedBox(height: 15),
                   Row(

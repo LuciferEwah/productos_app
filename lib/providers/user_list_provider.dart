@@ -59,6 +59,13 @@ class UserListProvider extends ChangeNotifier {
     return userId;
   }
 
+  Future<String?> getEmailById(int id) async {
+    final db = await DBProvider.db.database;
+    final res =
+        await db!.query('USUARIO', where: 'id = ?', whereArgs: [id]);
+    return res.isNotEmpty ? res.first['email'] as String? : null;
+  }
+
   deleteById(int? id) async {
     if (id != null) {
       await DBProvider.db.deleteUserById(id);
