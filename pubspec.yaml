@@ -40,7 +40,7 @@ dependencies:
   http: ^0.13.5
   sqflite: ^2.2.7
   image_picker: ^0.8.7+4
-  
+  connectivity_plus: ^4.0.1
 
 dev_dependencies:
   flutter_test:

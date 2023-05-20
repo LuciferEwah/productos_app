@@ -43,7 +43,7 @@ class _Box extends StatelessWidget {
       width: double.infinity,
       height: size.height * 0.4,
       decoration: _boxBackground(),
-      child: Stack(children: const [
+      child: const Stack(children: [
         Positioned(
           top: 90,
           left: 30,

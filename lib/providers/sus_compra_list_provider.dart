@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:productos_app/models/models.dart';
 import 'package:productos_app/providers/db_provider.dart';
 
-
-
 class SuscriptionCompraListProvider extends ChangeNotifier {
   List<CompraSuscripcion> compraSus = [];
   bool isLoading = true;
@@ -22,7 +20,7 @@ class SuscriptionCompraListProvider extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     final compraSus = await DBProvider.db.getCompraSuscripcionesAll();
-    if (compraSus == null) {
+    if (compraSus.isEmpty) {
       isLoading = false;
       notifyListeners();
       return [];

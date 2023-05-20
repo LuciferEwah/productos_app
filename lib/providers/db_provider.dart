@@ -5,8 +5,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:productos_app/models/models.dart';
 import 'package:sqflite/sqflite.dart';
 
-
-
 class DBProvider {
   static Database? _database;
   static final DBProvider db = DBProvider._();
@@ -256,7 +254,7 @@ class DBProvider {
     final db = await database;
     final result = await db!
         .query('SUSCRIPCIONES', where: 'estado = ?', whereArgs: ["Activo"]);
-    result.forEach((subscription) {
+    for (var subscription in result) {
       DateTime endDate = DateTime.parse(subscription["fecha_fin"]
           as String); // AGREGAMOS EL "AS STRING" PA SOLUCIONAR LO DEL DATETIME.PARSE()
 
@@ -268,10 +266,6 @@ class DBProvider {
           whereArgs: [subscription["id"]],
         );
       }
-    });
+    }
   }
-
-  
 }
-
-

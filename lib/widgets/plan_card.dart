@@ -50,25 +50,23 @@ class PlanCard extends StatelessWidget {
                 builder: (BuildContext context,
                     AsyncSnapshot<Suscripciones?> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   } else {
                     if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {
                       if (snapshot.data == null) {
                         return ElevatedButton(
-                          onPressed: () async {//parte el boton
-                            print('BOTON COMPRAR EN PLANES');
+                          onPressed: () async {
+                            //parte el boton
 
-                            // Crea una nueva suscripción
                             var fechaInicio = DateTime.now();
                             var suscripcion = Suscripciones(
                               fechaInicio: fechaInicio,
                               fechaFin: fechaInicio
                                   .add(Duration(days: plan.duracionMeses * 30)),
                               estado: 'Activo',
-                              idUsuario: userListProvider
-                                  .idUser, //TODO: clave valor esa wea // idUsuario=userListProvider.idUser
+                              idUsuario: userListProvider.idUser,
                               idPlan: plan.id!,
                             );
                             await suscriptionListProvider
@@ -76,12 +74,9 @@ class PlanCard extends StatelessWidget {
 
                             // Create a new CompraSuscripcion
                             var compraSuscripcion = CompraSuscripcion(
-                              usuarioId: userListProvider
-                                  .idUser!, //TODO: clave valor esa wea // idUsuario=userListProvider.idUser
-                              suscripcionId: suscripcion
-                                  .id!, // assuming suscripcion.id is set after addSubscription
-                              fechaCompra:
-                                  fechaInicio, // sale en string el datetime por alguna razon(causa: base dinamica xdd)
+                              usuarioId: userListProvider.idUser!,
+                              suscripcionId: suscripcion.id!,
+                              fechaCompra: fechaInicio,
                               total: plan.precioMensual,
                             );
 
