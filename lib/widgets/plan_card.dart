@@ -91,7 +91,7 @@ class PlanCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          child: Text(
+                          child: const Text(
                             'Comprar',
                             style: TextStyle(color: Colors.black),
                           ),
@@ -105,7 +105,7 @@ class PlanCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          child: Text(
+                          child: const Text(
                             'Suscripcion Activa',
                             style: TextStyle(color: Colors.black),
                           ),

@@ -44,7 +44,6 @@ class _PlanScreenBody extends StatelessWidget {
           children: [
             FloatingActionButton(
               onPressed: () {
-                print('BOTON DE DELETE');
                 if (planListProvider.selectedPlan.id == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

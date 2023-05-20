@@ -6,11 +6,11 @@ import '../interface/input_decorations.dart';
 import '../providers/subscription_list_provider.dart';
 import '../providers/user_list_provider.dart';
 
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _LoginScreenState createState() => _LoginScreenState();
 }
 

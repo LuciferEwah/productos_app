@@ -19,7 +19,6 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PlanListProvider()),
         ChangeNotifierProvider(create: (_) => SuscriptionListProvider()),
         ChangeNotifierProvider(create: (_) => SuscriptionCompraListProvider()),
-    
       ],
       child: const MyApp(),
     );
@@ -34,7 +33,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Productos App',
       debugShowCheckedModeBanner: false,
-      initialRoute: 'login',
+      initialRoute: 'home',
       routes: {
         'login': (_) => const LoginScreen(),
         'home': (_) => const HomeScreen(),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/subscription_list_provider.dart';
-import '../providers/user_list_provider.dart';
 
 class AdminSubScreen extends StatelessWidget {
   const AdminSubScreen({Key? key}) : super(key: key);
@@ -11,7 +10,8 @@ class AdminSubScreen extends StatelessWidget {
     /*
     final userListProvider = Provider.of<UserListProvider>(context);
     final users = userListProvider.users;*/
-    final suscriptionListProvider = Provider.of<SuscriptionListProvider>(context);
+    final suscriptionListProvider =
+        Provider.of<SuscriptionListProvider>(context);
     final suscriptions = suscriptionListProvider.suscripciones;
 
     return Scaffold(

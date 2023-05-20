@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:productos_app/screens/screens.dart';
 import 'package:productos_app/widgets/widgets.dart';
@@ -21,7 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final productListProvider = Provider.of<ProductListProvider>(context);
     final PageController pageController = PageController();
     final planListProvider = Provider.of<PlanListProvider>(context);
-    final plans = planListProvider.plans;
+    final connectivityResult = Connectivity().checkConnectivity();
+    print(connectivityResult);
     if (productListProvider.isLoading) return const LoadingScreen();
 
     pageController.addListener(() {
@@ -39,7 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 : Icons.admin_panel_settings_rounded,
           ),
           onPressed: () {
-            print('BOTON PARA IR A REVISAR PANTALLA&LISTA DE USUARIOS CON SUSCRIPCION');
             Navigator.pushNamed(
                 context, currentIndex == 0 ? 'admin' : 'admin_sub');
           },
