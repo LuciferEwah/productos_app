@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../models/models.dart';
 import '../providers/plan_list_provider.dart';
 import '../providers/product_list_provider.dart';
+import '../services/services.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -21,7 +22,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final productListProvider = Provider.of<ProductListProvider>(context);
     final PageController pageController = PageController();
     final planListProvider = Provider.of<PlanListProvider>(context);
-    final plans = planListProvider.plans;
+    final syncProductsToFirebase =
+        ProductsService(); // <- Instance of ProductsService
+
     if (productListProvider.isLoading) return const LoadingScreen();
 
     pageController.addListener(() {
@@ -39,7 +42,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 : Icons.admin_panel_settings_rounded,
           ),
           onPressed: () {
-            print('BOTON PARA IR A REVISAR PANTALLA&LISTA DE USUARIOS CON SUSCRIPCION');
             Navigator.pushNamed(
                 context, currentIndex == 0 ? 'admin' : 'admin_sub');
           },
@@ -85,6 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () async {
                 productListProvider.newProduct(
                     nombre: '', precio: 0.0, stock: 0);
+                await syncProductsToFirebase.syncProductsToFirebase();
               },
             )
           : FloatingActionButton(
