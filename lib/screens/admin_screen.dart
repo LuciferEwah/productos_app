@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_list_provider.dart';
+import '../services/users_service.dart';
 
 class UserListPage extends StatelessWidget {
   const UserListPage({Key? key}) : super(key: key);
@@ -9,7 +10,7 @@ class UserListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final userListProvider = Provider.of<UserListProvider>(context);
     final users = userListProvider.users;
-
+    final userService = UsersService();
     return Scaffold(
       backgroundColor: Colors.white, // Added white background
       appBar: AppBar(
@@ -34,8 +35,10 @@ class UserListPage extends StatelessWidget {
                     ),
                   ),
                   direction: DismissDirection.endToStart,
-                  onDismissed: (_) {
+                  onDismissed: (_) async {
                     userListProvider.deleteById(user.id);
+                    // Llamada al método syncUsersToFirebase
+                    await userService.syncUsersToFirebase();
                   },
                   child: Container(
                     decoration: BoxDecoration(

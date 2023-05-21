@@ -7,10 +7,10 @@ import 'package:provider/provider.dart';
 import '../interface/input_decorations.dart';
 import '../models/user_model.dart';
 import '../providers/user_list_provider.dart';
+import 'package:productos_app/services/services.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,6 +69,7 @@ class _RegisterFrom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final registrationForm = Provider.of<RegisterFromProvider>(context);
+    final userService = UsersService(); // Instancia de UsersService
     return Form(
       key: registrationForm.fromKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -154,9 +155,13 @@ class _RegisterFrom extends StatelessWidget {
                       userListProvider.newUser(user,
                           email: user.email, contrasena: user.contrasena);
 
+                      // Llamada al método syncUsersToFirebase
+                      await userService.syncUsersToFirebase();
+
                       registrationForm.isLoading = false;
                       // ignore: invalid_use_of_protected_member
                       userListProvider.notifyListeners();
+
                       // ignore: use_build_context_synchronously
                       Navigator.pushReplacementNamed(context, 'login');
                     } else {
