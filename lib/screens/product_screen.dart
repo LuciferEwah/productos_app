@@ -29,6 +29,7 @@ class _ProductScreenBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productFrom = Provider.of<ProductFromProvider>(context);
+    final productsService = ProductsService();
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.only(
@@ -93,6 +94,8 @@ class _ProductScreenBody extends StatelessWidget {
               } else {
                 productListProvider
                     .deleteById(productListProvider.selectedProduct.id!);
+                // Llamada a la función para sincronizar los productos con Firebase
+                productsService.syncProductsToFirebase();
                 Navigator.of(context).pop();
               }
             },
@@ -103,6 +106,8 @@ class _ProductScreenBody extends StatelessWidget {
           FloatingActionButton(
             onPressed: () {
               productListProvider.update(productFrom.product);
+              // Llamada a la función para sincronizar los productos con Firebase
+              productsService.syncProductsToFirebase();
               Navigator.of(context).pop();
             },
             heroTag: null,

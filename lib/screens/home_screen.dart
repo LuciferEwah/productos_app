@@ -4,8 +4,8 @@ import 'package:productos_app/screens/screens.dart';
 import 'package:productos_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 import '../models/models.dart';
-import '../providers/plan_list_provider.dart';
-import '../providers/product_list_provider.dart';
+import 'package:productos_app/providers/provider.dart';
+import 'package:productos_app/services/services.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -16,14 +16,29 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
+  late Future<ConnectivityResult> _connectivityResult;
+  @override
+  void initState() {
+    //TODO: ESTO ES DE PRUEBA, ELIMINAR CUANDO NO SE OCUPE
+    super.initState();
+    _connectivityResult = Connectivity().checkConnectivity();
+    _connectivityResult.then((result) {
+      if (result == ConnectivityResult.none) {
+        // No hay conexión a internet
+        print('No estás conectado a internet');
+      } else {
+        // Hay conexión a internet
+        print('Estás conectado a internet');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final productListProvider = Provider.of<ProductListProvider>(context);
     final PageController pageController = PageController();
     final planListProvider = Provider.of<PlanListProvider>(context);
-    final connectivityResult = Connectivity().checkConnectivity();
-    print(connectivityResult);
+    final productsService = ProductsService();
     if (productListProvider.isLoading) return const LoadingScreen();
 
     pageController.addListener(() {
@@ -86,6 +101,8 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () async {
                 productListProvider.newProduct(
                     nombre: '', precio: 0.0, stock: 0);
+                // Llamada a la función para sincronizar los productos con Firebase
+                productsService.syncProductsToFirebase();
               },
             )
           : FloatingActionButton(
