@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/product_list_provider.dart';
 import '../providers/subscription_list_provider.dart';
 import '../providers/user_list_provider.dart';
+import 'package:productos_app/services/services.dart';
 
 class ShoppingScreen extends StatefulWidget {
   const ShoppingScreen({Key? key}) : super(key: key);
@@ -84,7 +85,7 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
     final userListProvider = Provider.of<UserListProvider>(context);
     final suscriptionListProvider =
         Provider.of<SuscriptionListProvider>(context);
-
+    final syncVentasToFirebase = VentaService();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shopping'),
@@ -246,6 +247,9 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                         subtotal, iva, total, usuarioId, cantidad);
                     // Llamar a clearCart() para limpiar el carrito en ProductListProvider
                     productListProvider.clearCart();
+
+                    await syncVentasToFirebase.syncVentasToFirebase();
+                    await syncVentasToFirebase.syncDetalleVentasToFirebase();
                     const snackBar = SnackBar(
                         content:
                             Text('Su compra se ha realizado exitosamente'));

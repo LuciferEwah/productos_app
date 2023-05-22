@@ -5,8 +5,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:productos_app/models/models.dart';
 import 'package:sqflite/sqflite.dart';
 
-
-
 class DBProvider {
   static Database? _database;
   static final DBProvider db = DBProvider._();
@@ -155,12 +153,34 @@ class DBProvider {
     final res = await db!.delete('USUARIO', where: 'id = ?', whereArgs: [id]);
     return res;
   }
+
   //////////////////////////////////////////////// venta ////////////////////////////////////////////////
+  Future<List<VentaModel>> getVentasAll() async {
+    final db = await database;
+    final res = await db!.query('VENTA');
+
+    if (res.isNotEmpty) {
+      return res.map((venta) => VentaModel.fromJson(venta)).toList();
+    } else {
+      return [];
+    }
+  }
 
   Future<int> addVenta(VentaModel venta) async {
     final db = await database;
     final ventaId = await db!.insert('VENTA', venta.toJson());
     return ventaId;
+  }
+
+  Future<List<DetalleVentaModel>> getAllDetalleVenta() async {
+    final db = await database;
+    final res = await db!.query('DETALLE_VENTA');
+
+    if (res.isNotEmpty) {
+      return res.map((detalle) => DetalleVentaModel.fromJson(detalle)).toList();
+    } else {
+      return [];
+    }
   }
 
   Future<int> addDetalleVenta(DetalleVentaModel detallesVenta) async {
@@ -270,8 +290,4 @@ class DBProvider {
       }
     });
   }
-
-  
 }
-
-
