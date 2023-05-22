@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:productos_app/models/models.dart';
 import 'package:provider/provider.dart';
 import 'package:productos_app/providers/provider.dart';
+import 'package:productos_app/services/services.dart';
 
 class PlanCard extends StatelessWidget {
   const PlanCard({
@@ -23,7 +24,7 @@ class PlanCard extends StatelessWidget {
         Provider.of<SuscriptionListProvider>(context);
     final suscriptionCompraListProvider =
         Provider.of<SuscriptionCompraListProvider>(context);
-
+    final syncSuscripcionesToFirebase = SubscriptionService();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Card(
@@ -81,7 +82,11 @@ class PlanCard extends StatelessWidget {
                             // Guarda la suscripción en la base de datos
                             await suscriptionCompraListProvider
                                 .newCompraSuscripcion(compraSuscripcion);
-                            // Aquí va tu código para comprar el plan
+                            //Los inyecta a firebase
+                            await syncSuscripcionesToFirebase
+                                .syncSuscripcionesToFirebase();
+                            await syncSuscripcionesToFirebase
+                                .syncCompraSuscripcionesToFirebase();
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.orange[700],

@@ -239,6 +239,8 @@ class DBProvider {
         : [];
   }
 
+  //COMPRA SUSCRIPCIONES
+
   Future<CompraSuscripcion> newCompraSuscripcion(
       CompraSuscripcion newCompraSuscripcion) async {
     final db = await database;
@@ -278,8 +280,7 @@ class DBProvider {
     final result = await db!
         .query('SUSCRIPCIONES', where: 'estado = ?', whereArgs: ["Activo"]);
     result.forEach((subscription) {
-      DateTime endDate = DateTime.parse(subscription["fecha_fin"]
-          as String); // AGREGAMOS EL "AS STRING" PA SOLUCIONAR LO DEL DATETIME.PARSE()
+      DateTime endDate = DateTime.parse(subscription["fecha_fin"] as String);
 
       if (DateTime.now().isAfter(endDate)) {
         db.update(
