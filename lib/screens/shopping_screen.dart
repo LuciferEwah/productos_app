@@ -179,11 +179,11 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                     ],
                   ),
                   const SizedBox(height: 15),
-                  FutureBuilder<Suscripciones?>(
+                  FutureBuilder<SuscripcionesModel?>(
                     future: suscriptionListProvider
                         .getActiveSubscription(userListProvider.idUser!),
                     builder: (BuildContext context,
-                        AsyncSnapshot<Suscripciones?> snapshot) {
+                        AsyncSnapshot<SuscripcionesModel?> snapshot) {
                       double descuento = 0;
                       if (snapshot.connectionState == ConnectionState.done) {
                         if (snapshot.hasData) {

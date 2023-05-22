@@ -221,7 +221,8 @@ class DBProvider {
   }
 
 //////////////////////////////////////////////// suscripciones ////////////////////////////////////////////////
-  Future<Suscripciones> newSuscripcion(Suscripciones newSuscripcion) async {
+  Future<SuscripcionesModel> newSuscripcion(
+      SuscripcionesModel newSuscripcion) async {
     final db = await database;
     final res = await db?.insert('SUSCRIPCIONES', newSuscripcion.toJson());
 
@@ -230,11 +231,11 @@ class DBProvider {
     return newSuscripcion;
   }
 
-  Future<List<Suscripciones>> getSuscripcionesAll() async {
+  Future<List<SuscripcionesModel>> getSuscripcionesAll() async {
     final db = await database;
     final res = await db!.query('SUSCRIPCIONES');
     return res.isNotEmpty
-        ? res.map((e) => Suscripciones.fromJson(e)).toList()
+        ? res.map((e) => SuscripcionesModel.fromJson(e)).toList()
         : [];
   }
 
@@ -257,7 +258,7 @@ class DBProvider {
         : [];
   }
 
-  Future<List<Suscripciones>> getActiveSubscription(int userId) async {
+  Future<List<SuscripcionesModel>> getActiveSubscription(int userId) async {
     final db = await database;
     final res = await db!.query(
       'SUSCRIPCIONES',
@@ -266,7 +267,7 @@ class DBProvider {
     );
 
     if (res.isNotEmpty) {
-      return res.map((s) => Suscripciones.fromJson(s)).toList();
+      return res.map((s) => SuscripcionesModel.fromJson(s)).toList();
     } else {
       return [];
     }

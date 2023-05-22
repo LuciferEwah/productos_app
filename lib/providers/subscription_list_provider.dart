@@ -4,20 +4,20 @@ import 'package:productos_app/providers/db_provider.dart';
 import 'dart:async';
 
 class SuscriptionListProvider extends ChangeNotifier {
-  List<Suscripciones> suscripciones = [];
+  List<SuscripcionesModel> suscripciones = [];
   bool isLoading = true;
 
   SuscriptionListProvider() {
     cargarSuscripcion();
   }
 
-  Future<void> addSubscription(Suscripciones suscripcion) async {
+  Future<void> addSubscription(SuscripcionesModel suscripcion) async {
     await DBProvider.db.newSuscripcion(suscripcion);
     suscripciones.add(suscripcion);
     notifyListeners();
   }
 
-  Future<List<Suscripciones>> cargarSuscripcion() async {
+  Future<List<SuscripcionesModel>> cargarSuscripcion() async {
     isLoading = true;
     notifyListeners();
     final suscripciones = await DBProvider.db.getSuscripcionesAll();
@@ -43,7 +43,7 @@ class SuscriptionListProvider extends ChangeNotifier {
     });
   }
 
-  Future<Suscripciones?> getActiveSubscription(int userId) async {
+  Future<SuscripcionesModel?> getActiveSubscription(int userId) async {
     final suscripciones = await DBProvider.db.getActiveSubscription(userId);
     if (suscripciones.isNotEmpty) {
       return suscripciones.first;

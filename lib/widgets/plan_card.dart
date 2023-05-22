@@ -44,11 +44,11 @@ class PlanCard extends StatelessWidget {
               ),
               if (trailing != null) trailing!,
               const SizedBox(width: 10),
-              FutureBuilder<Suscripciones?>(
+              FutureBuilder<SuscripcionesModel?>(
                 future: suscriptionListProvider
                     .getActiveSubscription(userListProvider.idUser!),
                 builder: (BuildContext context,
-                    AsyncSnapshot<Suscripciones?> snapshot) {
+                    AsyncSnapshot<SuscripcionesModel?> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
                   } else {
@@ -59,7 +59,7 @@ class PlanCard extends StatelessWidget {
                         return ElevatedButton(
                           onPressed: () async {
                             var fechaInicio = DateTime.now();
-                            var suscripcion = Suscripciones(
+                            var suscripcion = SuscripcionesModel(
                               fechaInicio: fechaInicio,
                               fechaFin: fechaInicio
                                   .add(Duration(days: plan.duracionMeses * 30)),
