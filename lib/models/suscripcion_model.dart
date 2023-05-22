@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-class Suscripciones {
+class SuscripcionesModel {
   int? id;
-  DateTime fechaInicio;//
+  DateTime fechaInicio; //
   DateTime fechaFin;
-  String estado; 
+  String estado;
   int? idUsuario;
   int idPlan;
 
-  Suscripciones({
+  SuscripcionesModel({
     this.id,
     required this.fechaInicio,
     required this.fechaFin,
@@ -17,12 +17,13 @@ class Suscripciones {
     required this.idPlan,
   });
 
-  factory Suscripciones.fromRawJson(String str) =>
-      Suscripciones.fromJson(json.decode(str));
+  factory SuscripcionesModel.fromRawJson(String str) =>
+      SuscripcionesModel.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Suscripciones.fromJson(Map<String, dynamic> json) => Suscripciones(
+  factory SuscripcionesModel.fromJson(Map<String, dynamic> json) =>
+      SuscripcionesModel(
         id: json["id"],
         fechaInicio: DateTime.parse(json["fecha_inicio"]),
         fechaFin: DateTime.parse(json["fecha_fin"]),

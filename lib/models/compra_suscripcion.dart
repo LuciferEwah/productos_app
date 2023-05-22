@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class CompraSuscripcion {
   int? id;
   int usuarioId;
@@ -16,7 +14,8 @@ class CompraSuscripcion {
   });
 
   // Para convertir un mapa a un objeto de CompraSuscripcion
-  factory CompraSuscripcion.fromJson(Map<String, dynamic> json) =>  CompraSuscripcion(
+  factory CompraSuscripcion.fromJson(Map<String, dynamic> json) =>
+      CompraSuscripcion(
         id: json["id"],
         usuarioId: json["usuario_id"],
         suscripcionId: json["suscripcion_id"],

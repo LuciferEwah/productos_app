@@ -5,8 +5,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:productos_app/models/models.dart';
 import 'package:sqflite/sqflite.dart';
 
-
-
 class DBProvider {
   static Database? _database;
   static final DBProvider db = DBProvider._();
@@ -155,12 +153,34 @@ class DBProvider {
     final res = await db!.delete('USUARIO', where: 'id = ?', whereArgs: [id]);
     return res;
   }
+
   //////////////////////////////////////////////// venta ////////////////////////////////////////////////
+  Future<List<VentaModel>> getVentasAll() async {
+    final db = await database;
+    final res = await db!.query('VENTA');
+
+    if (res.isNotEmpty) {
+      return res.map((venta) => VentaModel.fromJson(venta)).toList();
+    } else {
+      return [];
+    }
+  }
 
   Future<int> addVenta(VentaModel venta) async {
     final db = await database;
     final ventaId = await db!.insert('VENTA', venta.toJson());
     return ventaId;
+  }
+
+  Future<List<DetalleVentaModel>> getAllDetalleVenta() async {
+    final db = await database;
+    final res = await db!.query('DETALLE_VENTA');
+
+    if (res.isNotEmpty) {
+      return res.map((detalle) => DetalleVentaModel.fromJson(detalle)).toList();
+    } else {
+      return [];
+    }
   }
 
   Future<int> addDetalleVenta(DetalleVentaModel detallesVenta) async {
@@ -201,7 +221,8 @@ class DBProvider {
   }
 
 //////////////////////////////////////////////// suscripciones ////////////////////////////////////////////////
-  Future<Suscripciones> newSuscripcion(Suscripciones newSuscripcion) async {
+  Future<SuscripcionesModel> newSuscripcion(
+      SuscripcionesModel newSuscripcion) async {
     final db = await database;
     final res = await db?.insert('SUSCRIPCIONES', newSuscripcion.toJson());
 
@@ -210,13 +231,15 @@ class DBProvider {
     return newSuscripcion;
   }
 
-  Future<List<Suscripciones>> getSuscripcionesAll() async {
+  Future<List<SuscripcionesModel>> getSuscripcionesAll() async {
     final db = await database;
     final res = await db!.query('SUSCRIPCIONES');
     return res.isNotEmpty
-        ? res.map((e) => Suscripciones.fromJson(e)).toList()
+        ? res.map((e) => SuscripcionesModel.fromJson(e)).toList()
         : [];
   }
+
+  //COMPRA SUSCRIPCIONES
 
   Future<CompraSuscripcion> newCompraSuscripcion(
       CompraSuscripcion newCompraSuscripcion) async {
@@ -237,7 +260,7 @@ class DBProvider {
         : [];
   }
 
-  Future<List<Suscripciones>> getActiveSubscription(int userId) async {
+  Future<List<SuscripcionesModel>> getActiveSubscription(int userId) async {
     final db = await database;
     final res = await db!.query(
       'SUSCRIPCIONES',
@@ -246,7 +269,7 @@ class DBProvider {
     );
 
     if (res.isNotEmpty) {
-      return res.map((s) => Suscripciones.fromJson(s)).toList();
+      return res.map((s) => SuscripcionesModel.fromJson(s)).toList();
     } else {
       return [];
     }
@@ -257,8 +280,7 @@ class DBProvider {
     final result = await db!
         .query('SUSCRIPCIONES', where: 'estado = ?', whereArgs: ["Activo"]);
     result.forEach((subscription) {
-      DateTime endDate = DateTime.parse(subscription["fecha_fin"]
-          as String); // AGREGAMOS EL "AS STRING" PA SOLUCIONAR LO DEL DATETIME.PARSE()
+      DateTime endDate = DateTime.parse(subscription["fecha_fin"] as String);
 
       if (DateTime.now().isAfter(endDate)) {
         db.update(
@@ -270,8 +292,4 @@ class DBProvider {
       }
     });
   }
-
-  
 }
-
-

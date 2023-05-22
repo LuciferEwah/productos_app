@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:productos_app/widgets/product_img.dart';
 import 'package:provider/provider.dart';
 import 'package:productos_app/providers/provider.dart';
-
-import '../services/services.dart';
+import 'package:productos_app/services/services.dart';
 
 class ProductScreen extends StatelessWidget {
   const ProductScreen({Key? key}) : super(key: key);
@@ -12,9 +11,13 @@ class ProductScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productListProvider = Provider.of<ProductListProvider>(context);
+    final syncProductsToFirebase = ProductsService();
+
     return ChangeNotifierProvider(
       create: (_) => ProductFromProvider(productListProvider.selectedProduct),
-      child: _ProductScreenBody(productListProvider: productListProvider),
+      child: _ProductScreenBody(
+          productListProvider: productListProvider,
+          syncProductsToFirebase: syncProductsToFirebase),
     );
   }
 }
@@ -22,10 +25,10 @@ class ProductScreen extends StatelessWidget {
 class _ProductScreenBody extends StatelessWidget {
   const _ProductScreenBody({
     required this.productListProvider,
+    required this.syncProductsToFirebase,
   });
-
   final ProductListProvider productListProvider;
-
+  final ProductsService syncProductsToFirebase;
   @override
   Widget build(BuildContext context) {
     final productFrom = Provider.of<ProductFromProvider>(context);
@@ -80,7 +83,7 @@ class _ProductScreenBody extends StatelessWidget {
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           FloatingActionButton(
-            onPressed: () {
+            onPressed: () async {
               if (productListProvider.selectedProduct.id == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -93,6 +96,8 @@ class _ProductScreenBody extends StatelessWidget {
               } else {
                 productListProvider
                     .deleteById(productListProvider.selectedProduct.id!);
+                await syncProductsToFirebase.syncProductsToFirebase();
+                // ignore: use_build_context_synchronously
                 Navigator.of(context).pop();
               }
             },
@@ -101,8 +106,10 @@ class _ProductScreenBody extends StatelessWidget {
                 const Icon(Icons.delete_outline), // Evita un error de animación
           ),
           FloatingActionButton(
-            onPressed: () {
+            onPressed: () async {
               productListProvider.update(productFrom.product);
+              await syncProductsToFirebase.syncProductsToFirebase();
+              // ignore: use_build_context_synchronously
               Navigator.of(context).pop();
             },
             heroTag: null,

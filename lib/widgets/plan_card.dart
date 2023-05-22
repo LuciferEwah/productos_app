@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:productos_app/models/models.dart';
 import 'package:provider/provider.dart';
 import 'package:productos_app/providers/provider.dart';
+import 'package:productos_app/services/services.dart';
 
 class PlanCard extends StatelessWidget {
   const PlanCard({
@@ -23,7 +24,7 @@ class PlanCard extends StatelessWidget {
         Provider.of<SuscriptionListProvider>(context);
     final suscriptionCompraListProvider =
         Provider.of<SuscriptionCompraListProvider>(context);
-
+    final syncSuscripcionesToFirebase = SubscriptionService();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Card(
@@ -44,31 +45,27 @@ class PlanCard extends StatelessWidget {
               ),
               if (trailing != null) trailing!,
               const SizedBox(width: 10),
-              FutureBuilder<Suscripciones?>(
+              FutureBuilder<SuscripcionesModel?>(
                 future: suscriptionListProvider
                     .getActiveSubscription(userListProvider.idUser!),
                 builder: (BuildContext context,
-                    AsyncSnapshot<Suscripciones?> snapshot) {
+                    AsyncSnapshot<SuscripcionesModel?> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   } else {
                     if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {
                       if (snapshot.data == null) {
                         return ElevatedButton(
-                          onPressed: () async {//parte el boton
-                            print('BOTON COMPRAR EN PLANES');
-
-                            // Crea una nueva suscripción
+                          onPressed: () async {
                             var fechaInicio = DateTime.now();
-                            var suscripcion = Suscripciones(
+                            var suscripcion = SuscripcionesModel(
                               fechaInicio: fechaInicio,
                               fechaFin: fechaInicio
                                   .add(Duration(days: plan.duracionMeses * 30)),
                               estado: 'Activo',
-                              idUsuario: userListProvider
-                                  .idUser, //TODO: clave valor esa wea // idUsuario=userListProvider.idUser
+                              idUsuario: userListProvider.idUser,
                               idPlan: plan.id!,
                             );
                             await suscriptionListProvider
@@ -76,19 +73,20 @@ class PlanCard extends StatelessWidget {
 
                             // Create a new CompraSuscripcion
                             var compraSuscripcion = CompraSuscripcion(
-                              usuarioId: userListProvider
-                                  .idUser!, //TODO: clave valor esa wea // idUsuario=userListProvider.idUser
-                              suscripcionId: suscripcion
-                                  .id!, // assuming suscripcion.id is set after addSubscription
-                              fechaCompra:
-                                  fechaInicio, // sale en string el datetime por alguna razon(causa: base dinamica xdd)
+                              usuarioId: userListProvider.idUser!,
+                              suscripcionId: suscripcion.id!,
+                              fechaCompra: fechaInicio,
                               total: plan.precioMensual,
                             );
 
                             // Guarda la suscripción en la base de datos
                             await suscriptionCompraListProvider
                                 .newCompraSuscripcion(compraSuscripcion);
-                            // Aquí va tu código para comprar el plan
+                            //Los inyecta a firebase
+                            await syncSuscripcionesToFirebase
+                                .syncSuscripcionesToFirebase();
+                            await syncSuscripcionesToFirebase
+                                .syncCompraSuscripcionesToFirebase();
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.orange[700],
@@ -96,7 +94,7 @@ class PlanCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          child: Text(
+                          child: const Text(
                             'Comprar',
                             style: TextStyle(color: Colors.black),
                           ),
@@ -110,7 +108,7 @@ class PlanCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          child: Text(
+                          child: const Text(
                             'Suscripcion Activa',
                             style: TextStyle(color: Colors.black),
                           ),

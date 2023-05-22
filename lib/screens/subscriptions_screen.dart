@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:productos_app/providers/provider.dart';
+import 'package:productos_app/services/services.dart';
 
 class SubscriptionsScreen extends StatelessWidget {
   const SubscriptionsScreen({Key? key}) : super(key: key);
@@ -17,12 +18,12 @@ class SubscriptionsScreen extends StatelessWidget {
 }
 
 class _PlanScreenBody extends StatelessWidget {
-  const _PlanScreenBody({
+  _PlanScreenBody({
     required this.planListProvider,
   });
 
   final PlanListProvider planListProvider;
-
+  final syncPlanToFirebase = PlanService();
   @override
   Widget build(BuildContext context) {
     final planFrom = Provider.of<PlanFromProvider>(context);
@@ -43,8 +44,7 @@ class _PlanScreenBody extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FloatingActionButton(
-              onPressed: () {
-                print('BOTON DE DELETE');
+              onPressed: () async {
                 if (planListProvider.selectedPlan.id == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -57,6 +57,8 @@ class _PlanScreenBody extends StatelessWidget {
                 } else {
                   planListProvider
                       .deleteById(planListProvider.selectedPlan.id!);
+                  await syncPlanToFirebase.syncPlansToFirebase();
+                  // ignore: use_build_context_synchronously
                   Navigator.of(context).pop();
                 }
               },
@@ -66,8 +68,10 @@ class _PlanScreenBody extends StatelessWidget {
               ),
             ),
             FloatingActionButton(
-              onPressed: () {
+              onPressed: () async {
                 planListProvider.update(planFrom.plan);
+                await syncPlanToFirebase.syncPlansToFirebase();
+                // ignore: use_build_context_synchronously
                 Navigator.of(context).pop();
               },
               heroTag: null,
