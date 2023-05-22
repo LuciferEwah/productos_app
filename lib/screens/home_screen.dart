@@ -22,9 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final productListProvider = Provider.of<ProductListProvider>(context);
     final PageController pageController = PageController();
     final planListProvider = Provider.of<PlanListProvider>(context);
-    final syncProductsToFirebase =
-        ProductsService(); // <- Instance of ProductsService
-
+    final syncProductsToFirebase = ProductsService();
+    final syncPlanToFirebase = PlanService();
     if (productListProvider.isLoading) return const LoadingScreen();
 
     pageController.addListener(() {
@@ -98,6 +97,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   duracionMeses: 0,
                   renovacionAutomatica: 0,
                 );
+
+                await syncPlanToFirebase.syncPlansToFirebase();
               },
               child: const Icon(Icons.add_box_outlined),
             ),
