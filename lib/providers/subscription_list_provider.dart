@@ -22,9 +22,10 @@ class SuscriptionListProvider extends ChangeNotifier {
     notifyListeners();
     final suscripciones = await DBProvider.db.getSuscripcionesAll();
     if (suscripciones.isNotEmpty) {
+      this.suscripciones = [...suscripciones];
       isLoading = false;
       notifyListeners();
-      return [];
+      return this.suscripciones;
     }
     this.suscripciones = [...suscripciones];
     isLoading = false;
