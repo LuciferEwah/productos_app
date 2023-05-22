@@ -24,10 +24,7 @@ class PlanService extends ChangeNotifier {
         print('No se han encontrado planes en Firebase.');
       } else {
         dynamic responseBody = json.decode(resp.body);
-
-        // Check if the responseBody is a List
         if (responseBody is List<dynamic>) {
-          // Remove the first null element, if present
           if (responseBody.isNotEmpty && responseBody[0] == null) {
             responseBody.removeAt(0);
           }
@@ -43,7 +40,7 @@ class PlanService extends ChangeNotifier {
 
       final sqlitePlans = await DBProvider.db.getPlans();
 
-      // Adding plans to Firebase
+      // agregar plans to Firebase
       final plansToAdd = sqlitePlans.where((sqlitePlan) => !firebasePlans
           .any((firebasePlan) => firebasePlan.id == sqlitePlan.id));
 
@@ -52,7 +49,7 @@ class PlanService extends ChangeNotifier {
         await http.put(addUrl, body: json.encode(planToAdd.toJson()));
       }
 
-      // Updating plans in Firebase
+      // modificar plans in Firebase
       final plansToUpdate = sqlitePlans.where((sqlitePlan) => firebasePlans.any(
           (firebasePlan) =>
               firebasePlan.id == sqlitePlan.id && firebasePlan != sqlitePlan));
@@ -62,7 +59,7 @@ class PlanService extends ChangeNotifier {
         await http.put(updateUrl, body: json.encode(planToUpdate.toJson()));
       }
 
-      // Deleting plans from Firebase
+      // eliminar plans from Firebase
       final plansToDelete = firebasePlans.where((firebasePlan) =>
           !sqlitePlans.any((sqlitePlan) => sqlitePlan.id == firebasePlan.id));
 

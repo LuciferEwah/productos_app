@@ -86,6 +86,7 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
     final suscriptionListProvider =
         Provider.of<SuscriptionListProvider>(context);
     final syncVentasToFirebase = VentaService();
+    final syncProductsToFirebase = ProductsService();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shopping'),
@@ -250,6 +251,7 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
 
                     await syncVentasToFirebase.syncVentasToFirebase();
                     await syncVentasToFirebase.syncDetalleVentasToFirebase();
+                    await syncProductsToFirebase.syncProductsToFirebase();
                     const snackBar = SnackBar(
                         content:
                             Text('Su compra se ha realizado exitosamente'));
