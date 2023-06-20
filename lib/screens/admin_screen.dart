@@ -1,61 +1,82 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/user_list_provider.dart';
-import '../services/users_service.dart';
+import 'package:productos_app/models/models.dart';
+import '../providers/db_provider.dart';
 
-class UserListPage extends StatelessWidget {
-  const UserListPage({Key? key}) : super(key: key);
+class KpiScreen extends StatefulWidget {
+  KpiScreen({Key? key}) : super(key: key);
+
+  @override
+  _KpiScreenState createState() => _KpiScreenState();
+}
+
+class _KpiScreenState extends State<KpiScreen> {
+  late Future<ProductModel> _topSellingProduct;
+  late Future<UserModel> _topBuyingUser;
+  late Future<double> _totalSales;
+
+  @override
+  void initState() {
+    super.initState();
+    _topSellingProduct = DBProvider.db.getTopSellingProduct();
+    _topBuyingUser = DBProvider.db.getTopBuyingUser();
+    _totalSales = DBProvider.db.getTotalSales();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final userListProvider = Provider.of<UserListProvider>(context);
-    final users = userListProvider.users;
-    final userService = UsersService();
     return Scaffold(
-      backgroundColor: Colors.white, // Added white background
       appBar: AppBar(
-        title: const Text('User List'),
+        title: const Text('KPI Dashboard'),
       ),
-      body: users.isEmpty
-          ? const Center(child: Text('No users found'))
-          : ListView.builder(
-              itemCount: users.length,
-              itemBuilder: (context, index) {
-                final user = users[index];
-                return Dismissible(
-                  key: UniqueKey(),
-                  background: Container(
-                    color: Colors.red,
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.only(right: 16),
-                    child: const Icon(
-                      Icons.delete,
-                      color: Colors.white,
-                      size: 36,
-                    ),
-                  ),
-                  direction: DismissDirection.endToStart,
-                  onDismissed: (_) async {
-                    userListProvider.deleteById(user.id);
-                    // Llamada al método syncUsersToFirebase
-                    await userService.syncUsersToFirebase();
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey.shade400,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: ListTile(
-                      title: Text(user.email),
-                      subtitle: Text('ID: ${user.id}'),
-                    ),
-                  ),
-                );
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView(
+          children: <Widget>[
+            FutureBuilder<ProductModel>(
+              future: _topSellingProduct,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListTile(
+                    title: const Text('Producto más vendido'),
+                    subtitle: Text('${snapshot.data!.nombre}'),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
+                return const CircularProgressIndicator();
               },
             ),
+            FutureBuilder<UserModel>(
+              future: _topBuyingUser,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListTile(
+                    title: const Text('Usuario que más compró'),
+                    subtitle: Text(snapshot.data!.email),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
+                return const CircularProgressIndicator();
+              },
+            ),
+            FutureBuilder<double>(
+              future: _totalSales,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListTile(
+                    title: const Text('Total de ventas'),
+                    subtitle: Text('${snapshot.data!}'),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
+                return const CircularProgressIndicator();
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

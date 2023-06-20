@@ -292,4 +292,103 @@ class DBProvider {
       }
     });
   }
+
+  //////////////////////////////////////////////// kpi ////////////////////////////////////////////////
+
+  // Obtener el producto más vendido
+  Future<ProductModel> getTopSellingProduct() async {
+    final db = await database;
+    final result = await db!.rawQuery('''
+      SELECT PRODUCTO.*, SUM(DETALLE_VENTA.cantidad) as total_sold 
+      FROM PRODUCTO 
+      JOIN DETALLE_VENTA ON PRODUCTO.id = DETALLE_VENTA.producto_id
+      GROUP BY PRODUCTO.id
+      ORDER BY total_sold DESC
+      LIMIT 1
+    ''');
+
+    if (result.isNotEmpty) {
+      return ProductModel.fromJson(result.first);
+    } else {
+      throw Exception('Producto no encontrado');
+    }
+  }
+
+  // Obtener el usuario que más compró
+  Future<UserModel> getTopBuyingUser() async {
+    final db = await database;
+    final result = await db!.rawQuery('''
+      SELECT USUARIO.*, SUM(DETALLE_VENTA.cantidad) as total_bought
+      FROM USUARIO 
+      JOIN VENTA ON USUARIO.id = VENTA.usuario_id
+      JOIN DETALLE_VENTA ON VENTA.id = DETALLE_VENTA.venta_id
+      GROUP BY USUARIO.id
+      ORDER BY total_bought DESC
+      LIMIT 1
+    ''');
+
+    if (result.isNotEmpty) {
+      return UserModel.fromJson(result.first);
+    } else {
+      throw Exception('No user found');
+    }
+  }
+
+  // Obtener el total de ventas
+  Future<double> getTotalSales() async {
+    final db = await database;
+    final result = await db!.rawQuery('''
+        SELECT SUM(total) as total_sales 
+        FROM VENTA
+      ''');
+
+    // If the result is not empty and total_sales is not null, return the value. Otherwise, return 0.0.
+    return result.isNotEmpty && result.first["total_sales"] != null
+        ? result.first["total_sales"] as double
+        : 0.0;
+  }
+
+  Future<int> getTotalActiveSubscriptions() async {
+    final db = await database;
+    final result = await db!.rawQuery('''
+      SELECT COUNT(*) as total_active_subscriptions 
+      FROM SUSCRIPCIONES
+      WHERE estado = 'Activo'
+    ''');
+
+    return result.isNotEmpty &&
+            result.first["total_active_subscriptions"] != null
+        ? result.first["total_active_subscriptions"] as int
+        : 0;
+  }
+
+  Future<PlanModel> getMostPopularSubscriptionPlan() async {
+    final db = await database;
+    final result = await db!.rawQuery('''
+      SELECT PLANES_DE_SUSCRIPCION.*, COUNT(SUSCRIPCIONES.id) as total_subscriptions 
+      FROM PLANES_DE_SUSCRIPCION
+      JOIN SUSCRIPCIONES ON PLANES_DE_SUSCRIPCION.id = SUSCRIPCIONES.id_plan
+      GROUP BY PLANES_DE_SUSCRIPCION.id
+      ORDER BY total_subscriptions DESC
+      LIMIT 1
+    ''');
+
+    if (result.isNotEmpty) {
+      return PlanModel.fromJson(result.first);
+    } else {
+      throw Exception('Plan no encontrado');
+    }
+  }
+
+  Future<double> getTotalSubscriptionRevenue() async {
+    final db = await database;
+    final result = await db!.rawQuery('''
+      SELECT SUM(COMPRA_SUSCRIPCION.total) as total_revenue 
+      FROM COMPRA_SUSCRIPCION
+    ''');
+
+    return result.isNotEmpty && result.first["total_revenue"] != null
+        ? result.first["total_revenue"] as double
+        : 0.0;
+  }
 }

@@ -19,7 +19,6 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PlanListProvider()),
         ChangeNotifierProvider(create: (_) => SuscriptionListProvider()),
         ChangeNotifierProvider(create: (_) => SuscriptionCompraListProvider()),
-    
       ],
       child: const MyApp(),
     );
@@ -41,10 +40,10 @@ class MyApp extends StatelessWidget {
         'producto': (_) => const ProductScreen(),
         'register': (_) => const RegisterScreen(),
         'carrito': (_) => const ShoppingScreen(),
-        'admin': (_) => const UserListPage(),
+        'admin': (_) => KpiScreen(),
         'suscripciones': (_) => const SubscriptionsScreen(),
         'plan': (_) => const PlanScreen(),
-        'admin_sub': (_) => const AdminSubScreen(),
+        'admin_sub': (_) => const KPIDashboardScreen(),
       },
       theme: ThemeData.light().copyWith(
           scaffoldBackgroundColor: Colors.grey[400],
