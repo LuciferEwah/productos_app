@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import '../providers/subscription_list_provider.dart';
 
 class KPIDashboardScreen extends StatelessWidget {
@@ -18,13 +19,13 @@ class KPIDashboardScreen extends StatelessWidget {
     int inactiveSuscriptions =
         suscriptions.where((s) => s.estado == 'Inactivo').length;
     double averageSuscriptionDuration = suscriptions.fold(
-            0,
-            (sum, s) =>
-                sum +
-                (s.fechaFin.millisecondsSinceEpoch -
-                    s.fechaInicio.millisecondsSinceEpoch)) /
-        totalSuscriptions;
+        0.0,
+        (sum, s) =>
+            sum +
+            (s.fechaFin.millisecondsSinceEpoch -
+                s.fechaInicio.millisecondsSinceEpoch));
     averageSuscriptionDuration = averageSuscriptionDuration /
+        totalSuscriptions /
         (24 * 60 * 60 * 1000); // Convertir milisegundos a días
 
     return Scaffold(
@@ -41,7 +42,21 @@ class KPIDashboardScreen extends StatelessWidget {
             Text('Suscripciones inactivas: $inactiveSuscriptions'),
             Text(
                 'Duración promedio de suscripción: ${averageSuscriptionDuration.toStringAsFixed(2)} días'),
-            // Agrega más KPI según tus necesidades.
+            // Gráfico de barras con Syncfusion
+            SfCartesianChart(
+              primaryXAxis: CategoryAxis(),
+              series: <ChartSeries>[
+                ColumnSeries<dynamic, String>(
+                  dataSource: [
+                    {'estado': 'Activo', 'count': activeSuscriptions},
+                    {'estado': 'Inactivo', 'count': inactiveSuscriptions},
+                  ],
+                  xValueMapper: (datum, index) => datum['estado'],
+                  yValueMapper: (datum, index) => datum['count'],
+                  name: 'Estado de suscripciones',
+                ),
+              ],
+            ),
           ],
         ),
       ),

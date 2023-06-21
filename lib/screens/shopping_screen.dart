@@ -252,11 +252,6 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                     await syncVentasToFirebase.syncVentasToFirebase();
                     await syncVentasToFirebase.syncDetalleVentasToFirebase();
                     await syncProductsToFirebase.syncProductsToFirebase();
-                    const snackBar = SnackBar(
-                        content:
-                            Text('Su compra se ha realizado exitosamente'));
-                    // ignore: use_build_context_synchronously
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     products = [];
                   }
                 } else {

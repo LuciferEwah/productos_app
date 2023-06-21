@@ -391,4 +391,25 @@ class DBProvider {
         ? result.first["total_revenue"] as double
         : 0.0;
   }
+
+  // Obtener las ventas mensuales
+  Future<List<SalesData>> getMonthlySales() async {
+    final db = await database;
+    final result = await db!.rawQuery('''
+    SELECT strftime('%Y-%m', fecha) as month, SUM(total) as total_sales
+    FROM VENTA
+    GROUP BY month
+  ''');
+
+    if (result.isNotEmpty) {
+      final salesDataList = result.map((row) {
+        final month = row['month'] as String;
+        final totalSales = row['total_sales'] as double;
+        return SalesData(month, totalSales);
+      }).toList();
+      return salesDataList;
+    } else {
+      throw Exception('No se encontraron datos de ventas mensuales.');
+    }
+  }
 }

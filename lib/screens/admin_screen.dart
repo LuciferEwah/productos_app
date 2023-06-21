@@ -26,53 +26,104 @@ class _KpiScreenState extends State<KpiScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('KPI Dashboard'),
+        title: const Text('Panel de Indicadores Clave'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView(
           children: <Widget>[
-            FutureBuilder<ProductModel>(
-              future: _topSellingProduct,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListTile(
-                    title: const Text('Producto más vendido'),
-                    subtitle: Text('${snapshot.data!.nombre}'),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                }
-                return const CircularProgressIndicator();
-              },
+            Container(
+              color: Colors.white,
+              child: FutureBuilder<ProductModel>(
+                future: _topSellingProduct,
+                builder: (context, snapshot) {
+                  if (!mounted)
+                    return Container(); // Verificar si el widget está montado
+                  if (snapshot.hasData) {
+                    return ListTile(
+                      title: Text(
+                        'Producto más vendido',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        snapshot.data!.nombre,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+                  return const CircularProgressIndicator();
+                },
+              ),
             ),
-            FutureBuilder<UserModel>(
-              future: _topBuyingUser,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListTile(
-                    title: const Text('Usuario que más compró'),
-                    subtitle: Text(snapshot.data!.email),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                }
-                return const CircularProgressIndicator();
-              },
+            Container(
+              color: Colors.white,
+              child: FutureBuilder<UserModel>(
+                future: _topBuyingUser,
+                builder: (context, snapshot) {
+                  if (!mounted)
+                    return Container(); // Verificar si el widget está montado
+                  if (snapshot.hasData) {
+                    return ListTile(
+                      title: Text(
+                        'Usuario que más compró',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        snapshot.data!.email,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+                  return const CircularProgressIndicator();
+                },
+              ),
             ),
-            FutureBuilder<double>(
-              future: _totalSales,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListTile(
-                    title: const Text('Total de ventas'),
-                    subtitle: Text('${snapshot.data!}'),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                }
-                return const CircularProgressIndicator();
-              },
+            Container(
+              color: Colors.white,
+              child: FutureBuilder<double>(
+                future: _totalSales,
+                builder: (context, snapshot) {
+                  if (!mounted)
+                    return Container(); // Verificar si el widget está montado
+                  if (snapshot.hasData) {
+                    return ListTile(
+                      title: Text(
+                        'Ventas totales',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '${snapshot.data!}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+                  return const CircularProgressIndicator();
+                },
+              ),
             ),
           ],
         ),
