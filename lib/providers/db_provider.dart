@@ -54,7 +54,6 @@ class DBProvider {
   Future<ProductModel> newProduct(ProductModel newProduct) async {
     final db = await database;
     final res = await db?.insert('PRODUCTO', newProduct.toJson());
-
     // Asigna el id generado automáticamente al producto y lo devuelve.
     newProduct.id = res;
     return newProduct;

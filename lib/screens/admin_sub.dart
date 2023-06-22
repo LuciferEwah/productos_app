@@ -11,8 +11,6 @@ class KPIDashboardScreen extends StatelessWidget {
     final suscriptionListProvider =
         Provider.of<SuscriptionListProvider>(context);
     final suscriptions = suscriptionListProvider.suscripciones;
-
-    // Aquí calculamos los KPI.
     int totalSuscriptions = suscriptions.length;
     int activeSuscriptions =
         suscriptions.where((s) => s.estado == 'Activo').length;
@@ -41,8 +39,7 @@ class KPIDashboardScreen extends StatelessWidget {
             Text('Suscripciones activas: $activeSuscriptions'),
             Text('Suscripciones inactivas: $inactiveSuscriptions'),
             Text(
-                'Duración promedio de suscripción: ${averageSuscriptionDuration.toStringAsFixed(2)} días'),
-            // Gráfico de barras con Syncfusion
+                'Duración promedio de suscripciónes: ${averageSuscriptionDuration.toStringAsFixed(2)} días'),
             SfCartesianChart(
               primaryXAxis: CategoryAxis(),
               series: <ChartSeries>[
